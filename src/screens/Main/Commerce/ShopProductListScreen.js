@@ -51,20 +51,20 @@ const ShopProductListScreen = ({ navigation }) => {
           { paddingBottom: insets.bottom + Sizer.vSize(100) },
         ]}>
         {PRODUCTS.map(p => (
-          <View key={p.n} style={[gardenUi.card, styles.productRow]}>
+          <View key={p.n} style={[styles.homeCard, styles.productRow]}>
             <TouchableOpacity
               style={styles.productMain}
               activeOpacity={0.88}
               onPress={() => navigation.navigate('ProductDetailScreen')}>
               <Image source={p.img} style={styles.productImg} resizeMode="cover" />
               <View style={styles.productCopy}>
-                <Typography size={14} color={G.forest} style={{ fontWeight: '600' }}>
+                <Typography size={13} color={G.forest} style={{ fontWeight: '600' }}>
                   {p.n}
                 </Typography>
                 <Typography size={11} color={G.muted} mT={2}>
                   {p.sub}
                 </Typography>
-                <Typography size={13} color={G.forest} mT={4} style={{ fontWeight: '700' }}>
+                <Typography size={12} color={G.forest} mT={4} style={{ fontWeight: '700' }}>
                   {p.p}
                 </Typography>
               </View>
@@ -72,7 +72,7 @@ const ShopProductListScreen = ({ navigation }) => {
             <TouchableOpacity
               style={styles.addBtn}
               onPress={() => navigation.navigate('CartScreen')}>
-              <Typography size={12} color="#FFFFFF" style={{ fontWeight: '600' }}>
+              <Typography size={11} color="#FFFFFF" style={{ fontWeight: '600' }}>
                 Add
               </Typography>
             </TouchableOpacity>
@@ -80,20 +80,20 @@ const ShopProductListScreen = ({ navigation }) => {
         ))}
 
         <TouchableOpacity
-          style={[styles.kitBanner]}
+          style={[styles.homeCard, styles.kitBanner]}
           activeOpacity={0.88}
           onPress={() => navigation.navigate('ProductDetailScreen')}>
           <View style={styles.kitCopy}>
             <Typography size={10} color={G.sage} style={{ fontWeight: '600', letterSpacing: 1 }}>
               COMPLETE YOUR PLAN
             </Typography>
-            <Typography size={15} color={G.forest} mT={4} style={{ fontWeight: '700' }}>
+            <Typography size={14} color={G.forest} mT={4} style={{ fontWeight: '700' }}>
               Backyard Food Garden Kit
             </Typography>
-            <Typography size={12} color={G.muted} mT={4}>
+            <Typography size={11} color={G.muted} mT={4}>
               Everything your space needs to thrive.
             </Typography>
-            <Typography size={14} color={G.forest} mT={6} style={{ fontWeight: '700' }}>
+            <Typography size={13} color={G.forest} mT={6} style={{ fontWeight: '700' }}>
               $599.00
             </Typography>
           </View>
@@ -117,7 +117,11 @@ const styles = StyleSheet.create({
     backgroundColor: G.sageLight,
   },
   tabActive: { backgroundColor: G.forest },
-  list: { gap: CARD_GAP, paddingTop: 4 },
+  list: { gap: 8, paddingTop: 4 },
+  homeCard: {
+    ...gardenUi.card,
+    borderRadius: 14,
+  },
   productRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -131,7 +135,7 @@ const styles = StyleSheet.create({
     gap: 12,
     minWidth: 0,
   },
-  productImg: { width: 64, height: 64, borderRadius: 6 },
+  productImg: { width: 60, height: 60, borderRadius: 8 },
   productCopy: { flex: 1, minWidth: 0 },
   addBtn: {
     backgroundColor: G.forest,
@@ -141,14 +145,13 @@ const styles = StyleSheet.create({
   },
   kitBanner: {
     flexDirection: 'row',
-    borderRadius: 8,
-    backgroundColor: G.sageLight,
+    borderRadius: 12,
     padding: 12,
     gap: 8,
     overflow: 'hidden',
   },
   kitCopy: { flex: 1, minWidth: 0 },
-  kitImg: { width: 96, height: 80, borderRadius: 6 },
+  kitImg: { width: 88, height: 72, borderRadius: 8 },
 });
 
 export default ShopProductListScreen;

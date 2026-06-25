@@ -21,7 +21,7 @@ import {
 import { plant1 } from '../../../assets/images';
 import { FONTS, SHADOWS } from '../../../globalStyle/Theme';
 import Sizer from '../../../helpers/Sizer';
-import { G } from '../../_partials/gardenUi';
+import { G, gardenUi } from '../../_partials/gardenUi';
 import { commerceStyles as c } from '../../_partials/commerceStyles';
 
 const SIZES = ['Small', 'Medium', 'Large'];
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: G.cream,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -382,7 +382,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: G.cream,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -392,14 +392,14 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: G.cream,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: G.divider,
     paddingHorizontal: Sizer.hSize(16),
     paddingTop: 6,
     shadowColor: '#1A3020',
     shadowOffset: { width: 0, height: -8 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.05,
     shadowRadius: 16,
     elevation: 14,
   },
@@ -426,7 +426,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 2,
     borderColor: G.primary,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: G.cream,
     alignItems: 'center',
     justifyContent: 'center',
   },

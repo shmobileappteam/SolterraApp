@@ -2,11 +2,16 @@ import React from 'react';
 import { Image, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import OnboardingImagePlaceholder from '../../../components/solterra/OnboardingImagePlaceholder';
+import OnboardingPagination from '../../../components/solterra/OnboardingPagination';
 import Typography from '../../../atomComponents/Typography';
 import { FONTS } from '../../../globalStyle/Theme';
 import Sizer from '../../../helpers/Sizer';
 import { getOnboardingPlaceholderSource } from '../../OnBoard/onboardingPlaceholderImages';
 import { ONBOARDING_IMAGE, ONBOARDING_UI } from '../../OnBoard/onboardingUi';
+import {
+  getSetupFlowPagination,
+  getSetupFlowRouteForDot,
+} from './setupFlowPagination';
 
 function getScaledImageSize(source, contentWidth, scale = 1) {
   const resolved = Image.resolveAssetSource(source);
@@ -36,12 +41,37 @@ export default function SetupFlowLayout({
   imageResizeMode = 'contain',
   scrollable = true,
   pinFooter = true,
+  setupRoute,
+  navigation,
+  hidePagination = false,
   children,
   footer,
 }) {
   const source = imageSource || getOnboardingPlaceholderSource(imageKey, imageBox);
   const textAlign = centered ? 'center' : 'left';
   const imageHeight = imageBox.maxHeight ?? 220;
+  const pagination =
+    setupRoute && navigation && !hidePagination ? getSetupFlowPagination(setupRoute) : null;
+
+  const onDotSelect = dotIndex => {
+    const target = getSetupFlowRouteForDot(dotIndex);
+    if (target && target !== setupRoute) {
+      navigation.navigate(target);
+    }
+  };
+
+  const footerContent = (
+    <>
+      {pagination ? (
+        <OnboardingPagination
+          count={pagination.count}
+          index={pagination.index}
+          onSelect={onDotSelect}
+        />
+      ) : null}
+      {footer}
+    </>
+  );
 
   const headingBlock = (
     <View style={[styles.headingBlock, centered && styles.headingBlockCenter]}>
@@ -136,13 +166,13 @@ export default function SetupFlowLayout({
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled">
           {mainContent}
-          {!pinFooter && footer ? <View style={styles.footerInline}>{footer}</View> : null}
+          {!pinFooter && footer ? <View style={styles.footerInline}>{footerContent}</View> : null}
         </ScrollView>
       ) : (
         <View style={styles.body}>{mainContent}</View>
       )}
 
-      {pinFooter && footer ? <View style={styles.footerPinned}>{footer}</View> : null}
+      {pinFooter && footer ? <View style={styles.footerPinned}>{footerContent}</View> : null}
     </SafeAreaView>
   );
 }

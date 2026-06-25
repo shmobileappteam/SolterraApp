@@ -35,6 +35,12 @@ export const IconPlus = ({ size = 16, color = '#fff' }) => (
   </Svg>
 );
 
+export const IconPlusOutline = ({ size = 14, color = G.forest }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path d="M12 5v14M5 12h14" stroke={color} strokeWidth={2} strokeLinecap="round" />
+  </Svg>
+);
+
 export const IconTruck = ({ size = 20, color = G.forest }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <Path d="M1 3h15v11H1zM16 8h4l3 4v2h-7V8zM5.5 21a2 2 0 100-4 2 2 0 000 4zM18.5 21a2 2 0 100-4 2 2 0 000 4z" {...stroke(color)} />

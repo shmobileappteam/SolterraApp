@@ -76,6 +76,8 @@ const ChoosePlanScreen = ({ navigation }) => {
   return (
     <SetupFlowLayout
       centered
+      setupRoute="ChoosePlanScreen"
+      navigation={navigation}
       title="Choose the plan that grows with you."
       subtitle="All plans include core features to help your garden thrive."
       subtitleColor={ONBOARDING_UI.green}

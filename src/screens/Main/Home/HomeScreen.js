@@ -13,14 +13,13 @@ import {
   AiBadge,
   ChevronRight,
   IconBell,
-  IconUser,
   TaskDropletIcon,
   TaskLeafIcon,
   WeatherSunSimple,
 } from '../../../components/solterra/home/HomeUiParts';
 import { heroGarden, lesson1, lesson2, lesson3, solMascot } from '../../../assets/images';
 import { FONTS } from '../../../globalStyle/Theme';
-import { CARD_GAP, G, cardPad, gardenUi } from '../../_partials/gardenUi';
+import { CARD_GAP, G, gardenUi } from '../../_partials/gardenUi';
 import Sizer from '../../../helpers/Sizer';
 
 const TASKS = [
@@ -33,17 +32,17 @@ const RECS = [
   {
     img: lesson1,
     title: 'Plant heat-loving crops this week.',
-    desc: 'Tomatoes, peppers, and basil thrive in your zone.',
+    desc: 'Tomatoes, peppers, and basil thrive now.',
   },
   {
     img: lesson2,
     title: 'Deep water before the heat wave.',
-    desc: 'Morning watering helps roots stay resilient.',
+    desc: 'Water early before temps peak.',
   },
   {
     img: lesson3,
     title: 'Add mulch to retain moisture.',
-    desc: 'A 2-inch layer cuts evaporation and weeds.',
+    desc: 'Mulch keeps soil cool and moist.',
   },
 ];
 
@@ -52,10 +51,10 @@ const HomeScreen = ({ navigation }) => (
       header={
         <View style={styles.headerRow}>
           <View style={styles.headerCopy}>
-            <Typography size={26} color={G.forest} style={styles.greeting}>
+            <Typography size={22} color={G.forest} style={styles.greeting}>
               Good morning, Emma
             </Typography>
-            <Typography size={13} color={G.muted} mT={4} style={styles.subGreeting}>
+            <Typography size={13} color={G.muted} mT={2} style={styles.subGreeting}>
               Let's keep your garden thriving.
             </Typography>
           </View>
@@ -68,17 +67,10 @@ const HomeScreen = ({ navigation }) => (
               <IconBell />
               <View style={styles.notifDot} />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.iconBtn}
-              hitSlop={8}
-              onPress={() => navigation.navigate('ProfileMenuScreen')}
-              accessibilityLabel="Profile">
-              <IconUser />
-            </TouchableOpacity>
           </View>
         </View>
       }>
-        {/* Ask with Solterra AI — sage border + lift shadow */}
+        {/* Ask with Solterra AI */}
         <View style={gardenUi.pageX}>
           <TouchableOpacity
             style={styles.aiCard}
@@ -91,145 +83,153 @@ const HomeScreen = ({ navigation }) => (
               <Image source={solMascot} style={styles.mascot} resizeMode="contain" />
             </View>
             <View style={styles.aiCopy}>
-              <Typography size={15} color={G.forest} style={styles.aiTitle}>
+              <Typography size={14} color={G.forest} style={styles.aiTitle}>
                 Ask with Solterra AI
               </Typography>
-              <Typography size={12} color={G.muted} mT={2} style={styles.aiSub}>
+              <Typography size={11} color={G.muted} mT={1} style={styles.aiSub}>
                 Plant care, diagnose issues & seasonal tips — anytime.
               </Typography>
             </View>
-            <ChevronRight size={20} color={G.sage} strokeWidth={2.5} />
+            <ChevronRight size={18} color={G.sage} strokeWidth={2.5} />
           </TouchableOpacity>
         </View>
 
-        {/* Cards stack — web space-y-2.5 */}
+        {/* Cards stack */}
         <View style={[gardenUi.pageX, styles.stack]}>
+          {/* Your Garden Card */}
           <TouchableOpacity
-            style={[gardenUi.card, styles.gardenCard]}
+            style={styles.gardenCard}
             activeOpacity={0.88}
             onPress={() => navigation.navigate('GardenScreen')}>
             <View style={styles.gardenCopy}>
-              <Typography size={10} color={G.muted} style={styles.eyebrow}>
-                YOUR GARDEN
+              <Typography size={12} color={G.forest} style={styles.gardenLabel}>
+                Your Garden
               </Typography>
-              <Typography size={15} color={G.forest} mT={2} style={styles.cardTitle}>
+              <Typography size={16} color={G.forest} mT={4} style={styles.gardenTitle}>
                 Backyard Edible Garden
               </Typography>
-              <Typography size={12} color={G.muted} mT={2}>
+              <Typography size={12} color={G.muted} mT={4} style={styles.gardenMeta}>
                 Zone 9b • Full Sun
               </Typography>
             </View>
-            <Image source={heroGarden} style={styles.gardenThumb} />
-            <ChevronRight size={16} color={G.muted} />
+            <View style={styles.gardenRight}>
+              <Image source={heroGarden} style={styles.gardenThumb} />
+              <ChevronRight size={16} color={G.forest} strokeWidth={2.25} />
+            </View>
           </TouchableOpacity>
 
-          <View style={[gardenUi.card, cardPad]}>
-            <Typography size={12} color={G.forest} style={styles.cardLabel}>
+          {/* Garden Health Score Card */}
+          <View style={[styles.homeCard, styles.healthCard]}>
+            <Typography size={13} color={G.forest} style={styles.cardLabel}>
               Garden Health Score
             </Typography>
             <View style={styles.healthMain}>
               <View style={styles.healthLeft}>
-                <View style={styles.scoreLine}>
-                  <Typography size={48} color={G.forest} style={styles.scoreBig}>
-                    92
-                  </Typography>
-                  <Typography size={14} color={G.sage} style={styles.scoreLabel}>
-                    Excellent
-                  </Typography>
-                </View>
+                <Typography size={48} color={G.forest} style={styles.scoreBig}>
+                  92
+                </Typography>
+                <Typography size={14} color={G.sage} style={styles.scoreLabel}>
+                  Excellent
+                </Typography>
                 <View style={styles.progressTrack}>
                   <View style={[styles.progressFill, { width: '92%' }]} />
                 </View>
               </View>
               <View style={styles.stemWrap}>
-                <HealthStemArt width={48} height={72} />
+                <HealthStemArt width={52} height={78} />
               </View>
             </View>
             <TouchableOpacity
               style={styles.detailsBtn}
               activeOpacity={0.8}
               onPress={() => navigation.navigate('GardenScreen')}>
-              <Typography size={12} color={G.sage} style={{ fontWeight: '500' }}>
+              <Typography size={12} color={G.sage} style={styles.detailsBtnText}>
                 Details
               </Typography>
             </TouchableOpacity>
           </View>
 
-          <View style={gardenUi.card}>
+          {/* This Week's Focus Section */}
+          <View style={styles.focusSection}>
             <TouchableOpacity
               style={styles.focusHeader}
               activeOpacity={0.88}
               onPress={() => navigation.navigate('TasksScreen')}>
-              <Typography size={15} color={G.forest} style={styles.cardTitle}>
+              <Typography size={14} color={G.forest} style={styles.cardTitle}>
                 This Week's Focus
               </Typography>
               <View style={styles.focusMeta}>
                 <View style={styles.taskPill}>
-                  <Typography size={11} color={G.sage} style={{ fontWeight: '500' }}>
+                  <Typography size={11} color={G.sage} style={styles.taskPillText}>
                     3 tasks
                   </Typography>
                 </View>
-                <ChevronRight size={16} color={G.muted} />
+                <ChevronRight size={14} color={G.muted} />
               </View>
             </TouchableOpacity>
-            <View style={styles.taskList}>
+            <View style={[styles.homeCard, styles.taskList]}>
               {TASKS.map((t, i) => (
                 <TouchableOpacity
                   key={t.title}
                   style={[styles.taskRow, i > 0 && styles.taskDivider]}
                   activeOpacity={0.88}
                   onPress={() => navigation.navigate('TasksScreen')}>
-                  <View style={styles.taskIconCircle}>
+                  <View style={[styles.taskIconSlot, t.type === 'droplet' ? styles.iconBgBlue : styles.iconBgGreen]}>
                     {t.type === 'droplet' ? <TaskDropletIcon /> : <TaskLeafIcon />}
                   </View>
                   <View style={styles.taskCopy}>
-                    <Typography size={14} color={G.forest} style={styles.taskTitle}>
+                    <Typography size={13} color={G.forest} style={styles.taskTitle}>
                       {t.title}
                     </Typography>
-                    <Typography size={12} color={G.muted}>{t.sub}</Typography>
+                    <Typography size={11} color={G.muted} mT={1}>
+                      {t.sub}
+                    </Typography>
                   </View>
-                  <Typography size={12} color={G.muted}>{t.time}</Typography>
+                  <Typography size={11} color={G.muted} style={styles.taskTime}>
+                    {t.time}
+                  </Typography>
                 </TouchableOpacity>
               ))}
             </View>
           </View>
 
-          <TouchableOpacity style={[gardenUi.card, styles.weatherCard]} activeOpacity={0.88}>
+          {/* Weather Card */}
+          <TouchableOpacity style={[styles.homeCard, styles.weatherCard]} activeOpacity={0.88}>
             <View style={styles.weatherLeft}>
               <WeatherSunSimple />
               <View style={styles.weatherTemps}>
-                <Typography size={28} color={G.forest} style={styles.tempBig}>
+                <Typography size={24} color={G.forest} style={styles.tempBig}>
                   82°F
                 </Typography>
-                <Typography size={13} color={G.forest} style={{ fontWeight: '500' }}>
+                <Typography size={12} color={G.forest} style={styles.weatherCondition}>
                   Mostly Sunny
                 </Typography>
-                <Typography size={11} color={G.muted}>Feels like 84°</Typography>
+                <Typography size={10} color={G.muted} mT={1}>Feels like 84°</Typography>
               </View>
             </View>
             <View style={styles.weatherDivider} />
             <View style={styles.weatherRight}>
               <View style={styles.weatherRightCopy}>
-                <Typography size={13} color={G.forest} style={{ fontWeight: '600' }}>
+                <Typography size={12} color={G.forest} style={styles.weatherHeadline}>
                   No rain expected
                 </Typography>
-                <Typography size={12} color={G.muted} mT={2}>
+                <Typography size={11} color={G.muted} mT={2}>
                   Perfect day to garden!
                 </Typography>
               </View>
-              <ChevronRight size={16} color={G.muted} />
+              <ChevronRight size={14} color={G.muted} />
             </View>
           </TouchableOpacity>
         </View>
 
-        {/* Recommendations — web mt-4 */}
+        {/* Recommendations */}
         <View style={styles.recSection}>
           <View style={[gardenUi.pageX, styles.recHeader]}>
-            <Typography size={15} color={G.forest} style={styles.cardTitle}>
+            <Typography size={15} color={G.forest} style={styles.recSectionTitle}>
               Recommendations for You
             </Typography>
             <TouchableOpacity onPress={() => navigation.navigate('GardenScreen')} hitSlop={8}>
-              <Typography size={12} color={G.muted} style={{ fontWeight: '500' }}>
+              <Typography size={12} color={G.sage} style={styles.viewAll}>
                 View all
               </Typography>
             </TouchableOpacity>
@@ -241,18 +241,20 @@ const HomeScreen = ({ navigation }) => (
             {RECS.map(r => (
               <TouchableOpacity
                 key={r.title}
-                style={[gardenUi.card, styles.recCard]}
+                style={[styles.homeCard, styles.recCard]}
                 activeOpacity={0.88}
                 onPress={() => navigation.navigate('GardenScreen')}>
                 <Image source={r.img} style={styles.recImg} resizeMode="cover" />
-                <Typography size={12} color={G.forest} mT={10} numberOfLines={2} style={styles.recTitle}>
-                  {r.title}
-                </Typography>
-                <Typography size={10} color={G.muted} mT={4} numberOfLines={2} style={{ lineHeight: 14 }}>
-                  {r.desc}
-                </Typography>
-                <View style={styles.recChevron}>
-                  <ChevronRight size={14} color={G.muted} />
+                <View style={styles.recBody}>
+                  <Typography size={12} color={G.forest} numberOfLines={2} style={styles.recTitle}>
+                    {r.title}
+                  </Typography>
+                  <Typography size={10} color={G.muted} mT={4} numberOfLines={2} style={styles.recDesc}>
+                    {r.desc}
+                  </Typography>
+                  <View style={styles.recChevron}>
+                    <ChevronRight size={14} color={G.sage} strokeWidth={2.25} />
+                  </View>
                 </View>
               </TouchableOpacity>
             ))}
@@ -266,148 +268,219 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
-    paddingBottom: 4,
+    paddingBottom: 2,
   },
   headerCopy: { flex: 1, paddingRight: 8 },
   greeting: {
-    fontFamily: FONTS.display,
+    fontFamily: FONTS.bodySemiBold,
     fontWeight: '700',
-    lineHeight: Sizer.fS(30),
+    lineHeight: Sizer.fS(26),
   },
-  subGreeting: { lineHeight: Sizer.fS(18) },
+  subGreeting: { 
+    lineHeight: Sizer.fS(18),
+    fontFamily: FONTS.body,
+  },
   headerActions: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   iconBtn: {
-    width: 40,
-    height: 40,
+    width: 36,
+    height: 36,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 0,
   },
   notifDot: {
     position: 'absolute',
-    top: 9,
-    right: 9,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    top: 6,
+    right: 6,
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
     backgroundColor: G.sage,
+    borderWidth: 1.2,
+    borderColor: G.cream,
   },
   aiCard: {
+    ...gardenUi.card,
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 12,
-    padding: 14,
-    borderRadius: 8,
-    backgroundColor: G.sageLight,
-    borderWidth: 2,
+    marginTop: 10,
+    padding: 12,
+    borderRadius: 12,
+    backgroundColor: G.cream,
+    borderWidth: 1.5,
     borderColor: G.sage,
-    shadowColor: '#1A3020',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 4,
   },
-  aiBadgePos: { position: 'absolute', top: 12, right: 12, zIndex: 1 },
+  aiBadgePos: { position: 'absolute', top: 10, right: 10, zIndex: 1 },
   mascotWrap: {
     shadowColor: '#1A3020',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.12,
-    shadowRadius: 3,
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
     elevation: 2,
   },
-  mascot: { width: 48, height: 48 },
-  aiCopy: { flex: 1, marginLeft: 12, paddingRight: 28 },
+  mascot: { width: 44, height: 44 },
+  aiCopy: { flex: 1, marginLeft: 10, paddingRight: 24 },
   aiTitle: { fontWeight: '700' },
-  aiSub: { lineHeight: 17 },
-  stack: { gap: CARD_GAP, marginTop: 12, paddingBottom: 4 },
+  aiSub: { lineHeight: 15 },
+  stack: { gap: 8, marginTop: 10, paddingBottom: 4 },
+  homeCard: {
+    ...gardenUi.card,
+    borderRadius: 14,
+  },
   gardenCard: {
-    ...cardPad,
+    ...gardenUi.card,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    borderRadius: 20,
+  },
+  gardenCopy: { flex: 1, minWidth: 0, paddingRight: 10 },
+  gardenLabel: {
+    fontFamily: FONTS.bodySemiBold,
+    fontWeight: '700',
+  },
+  gardenTitle: {
+    fontFamily: FONTS.bodySemiBold,
+    fontWeight: '700',
+  },
+  gardenMeta: {
+    fontFamily: FONTS.body,
+    fontWeight: '400',
+  },
+  gardenRight: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+    flexShrink: 0,
   },
-  gardenCopy: { flex: 1, minWidth: 0 },
-  eyebrow: { letterSpacing: 1.6, fontWeight: '600', textTransform: 'uppercase' },
-  cardTitle: { fontWeight: '600' },
-  cardLabel: { fontWeight: '600' },
-  gardenThumb: { width: 56, height: 56, borderRadius: 8 },
+  cardTitle: { 
+    fontFamily: FONTS.bodySemiBold,
+    fontWeight: '600',
+  },
+  cardLabel: { 
+    fontFamily: FONTS.bodySemiBold,
+    fontWeight: '600',
+  },
+  gardenThumb: { width: 82, height: 70, borderRadius: 10 },
+  healthCard: {
+    paddingHorizontal: 14,
+    paddingTop: 14,
+    paddingBottom: 14,
+  },
   healthMain: {
     flexDirection: 'row',
     marginTop: 8,
     alignItems: 'flex-start',
     justifyContent: 'space-between',
   },
-  healthLeft: { flex: 1, minWidth: 0, paddingRight: 8 },
-  scoreLine: { flexDirection: 'row', alignItems: 'baseline', gap: 8 },
+  healthLeft: { flex: 1, minWidth: 0, paddingRight: 12 },
   scoreBig: {
-    fontFamily: FONTS.display,
+    fontFamily: FONTS.bodySemiBold,
     fontWeight: '700',
-    lineHeight: Sizer.fS(48),
+    lineHeight: Sizer.fS(52),
+    letterSpacing: -1,
   },
-  scoreLabel: { fontWeight: '600', marginBottom: 4 },
-  stemWrap: { marginTop: -4 },
+  scoreLabel: { 
+    fontFamily: FONTS.bodySemiBold,
+    fontWeight: '600',
+    marginTop: -4,
+  },
+  stemWrap: { marginTop: -12, marginRight: 4 },
   progressTrack: {
-    height: 8,
-    borderRadius: 4,
+    height: 7,
+    borderRadius: 3.5,
     backgroundColor: G.sageLight,
     marginTop: 12,
     overflow: 'hidden',
   },
-  progressFill: { height: '100%', backgroundColor: G.sage, borderRadius: 4 },
+  progressFill: { height: '100%', backgroundColor: G.sage, borderRadius: 3.5 },
   detailsBtn: {
     alignSelf: 'flex-end',
-    marginTop: 12,
+    marginTop: 10,
     borderWidth: 1,
     borderColor: G.sage,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 5,
   },
+  detailsBtnText: {
+    fontFamily: FONTS.bodySemiBold,
+    fontWeight: '600',
+  },
+  focusSection: {
+    marginTop: 2,
+  },
   focusHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: 16,
+    paddingHorizontal: 14,
     paddingBottom: 8,
   },
   focusMeta: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   taskPill: {
     backgroundColor: G.sageLight,
     borderRadius: 999,
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     paddingVertical: 3,
   },
-  taskList: { paddingHorizontal: 16, paddingBottom: 12 },
+  taskPillText: {
+    fontFamily: FONTS.body,
+    fontWeight: '500',
+  },
+  taskList: { 
+    paddingHorizontal: 14, 
+    paddingBottom: 12,
+  },
   taskRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    gap: 12,
+    paddingVertical: 10,
+    gap: 10,
   },
   taskDivider: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: G.divider },
-  taskIconCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#F5F4F0',
+  taskIconSlot: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  iconBgBlue: {
+    backgroundColor: '#E6F0FA',
+  },
+  iconBgGreen: {
+    backgroundColor: '#E8F0E6',
+  },
   taskCopy: { flex: 1, minWidth: 0 },
-  taskTitle: { fontWeight: '600' },
+  taskTitle: { 
+    fontFamily: FONTS.bodySemiBold,
+    fontWeight: '600',
+  },
+  taskTime: {
+    flexShrink: 0,
+  },
   weatherCard: { flexDirection: 'row', alignItems: 'stretch', overflow: 'hidden' },
   weatherLeft: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    gap: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    gap: 10,
   },
   weatherTemps: { flex: 1 },
   tempBig: {
     fontFamily: FONTS.display,
     fontWeight: '700',
-    lineHeight: Sizer.fS(30),
+    lineHeight: Sizer.fS(28),
+  },
+  weatherCondition: {
+    fontFamily: FONTS.bodySemiBold,
+    fontWeight: '500',
+    marginTop: 1,
   },
   weatherDivider: {
     width: StyleSheet.hairlineWidth,
@@ -418,10 +491,15 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    gap: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 14,
+    gap: 6,
   },
   weatherRightCopy: { flex: 1, minWidth: 0 },
+  weatherHeadline: {
+    fontFamily: FONTS.bodySemiBold,
+    fontWeight: '600',
+  },
   recSection: { marginTop: 16 },
   recHeader: {
     flexDirection: 'row',
@@ -429,20 +507,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
+  recSectionTitle: {
+    fontFamily: FONTS.bodySemiBold,
+    fontWeight: '700',
+    lineHeight: Sizer.fS(20),
+  },
+  viewAll: {
+    fontFamily: FONTS.body,
+    fontWeight: '500',
+  },
   recScroll: {
     paddingHorizontal: 16,
     paddingBottom: 8,
-    gap: 10,
+    gap: 12,
   },
   recCard: {
-    width: 140,
-    padding: 10,
-    marginRight: 10,
-    minHeight: 168,
+    width: 158,
+    padding: 12,
+    borderRadius: 16,
+    overflow: 'hidden',
   },
-  recImg: { width: '100%', height: 80, borderRadius: 6 },
-  recTitle: { fontWeight: '600', lineHeight: 16 },
-  recChevron: { position: 'absolute', right: 12, bottom: 12 },
+  recImg: { width: '100%', height: 88, borderRadius: 10 },
+  recBody: {
+    flex: 1,
+    marginTop: 10,
+    minHeight: 72,
+    paddingRight: 18,
+  },
+  recTitle: {
+    fontFamily: FONTS.bodySemiBold,
+    fontWeight: '600',
+    lineHeight: Sizer.fS(16),
+  },
+  recDesc: {
+    lineHeight: Sizer.fS(14),
+    fontFamily: FONTS.body,
+  },
+  recChevron: { position: 'absolute', right: 0, bottom: 2 },
 });
 
 export default HomeScreen;

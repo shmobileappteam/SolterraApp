@@ -59,6 +59,8 @@ const ConnectExperienceScreen = ({ navigation }) => {
     <SetupFlowLayout
       imageFirst
       centered
+      setupRoute="ConnectExperienceScreen"
+      navigation={navigation}
       title="Connect for a better\nexperience."
       subtitle="Sync devices, get smarter\nrecommendations, and never\nlose your garden."
       subtitleColor={ONBOARDING_UI.text}

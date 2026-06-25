@@ -100,7 +100,7 @@ export default BottomNav;
 
 const styles = StyleSheet.create({
   bar: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: G.cream,
     borderTopWidth: 1,
     borderTopColor: G.divider,
     paddingTop: 8,

@@ -49,7 +49,7 @@ export const IconSparkles = ({ size = 12, color = '#fff' }) => (
 );
 
 export const TaskDropletIcon = () => (
-  <Svg width={20} height={20} viewBox="0 0 24 24">
+  <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
     <Path
       d="M12 2.69l5.66 5.66a8 8 0 11-11.32 0L12 2.69z"
       fill="#4A8FD4"
@@ -61,17 +61,15 @@ export const TaskLeafIcon = () => (
   <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
     <Path
       d="M11 20A7 7 0 019.5 6.5C13 3 20 4 20 4s-1 7-4.5 10.5A7 7 0 0111 20z"
-      stroke={G.sage}
-      strokeWidth={1.75}
-      fill="none"
+      fill={G.sage}
     />
-    <Path d="M11 20v-8" stroke={G.sage} strokeWidth={1.75} />
+    <Path d="M11 20v-8" stroke="#FFFFFF" strokeWidth={1.5} />
   </Svg>
 );
 
 export const WeatherSunSimple = () => (
   <View style={sunStyles.wrap}>
-    <Svg width={32} height={32} viewBox="0 0 32 32">
+    <Svg width={36} height={36} viewBox="0 0 32 32">
       <Circle cx="16" cy="16" r="8" fill="#E8A838" />
       <Path
         d="M16 4v3M16 25v3M4 16h3M25 16h3M7.5 7.5l2 2M22.5 22.5l-2 2M7.5 24.5l2-2M22.5 9.5l-2-2"
@@ -84,7 +82,7 @@ export const WeatherSunSimple = () => (
 );
 
 const sunStyles = StyleSheet.create({
-  wrap: { width: 32, height: 32 },
+  wrap: { width: 36, height: 36 },
 });
 
 export const AiBadge = () => (

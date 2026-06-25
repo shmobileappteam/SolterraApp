@@ -11,28 +11,13 @@ import OnboardingPagination from '../../components/solterra/OnboardingPagination
 import { COLORS, FONTS } from '../../globalStyle/Theme';
 import Sizer from '../../helpers/Sizer';
 import OnboardingSlide from './OnboardingSlide';
+import {
+  getOnboardingPagination,
+  getOnboardingSlideIndexForDot,
+  shouldShowOnboardingPagination,
+} from './onboardingPagination';
 import { FOOTER, ONBOARDING_UI } from './onboardingUi';
 import { ONBOARDING_SLIDES } from './onboardingSlides';
-
-const BATCH2_START = 6;
-const BATCH2_DOT_COUNT = 5;
-
-function getPaginationState(index) {
-  if (index < BATCH2_START) {
-    return { count: BATCH2_START, index };
-  }
-  return {
-    count: BATCH2_DOT_COUNT,
-    index: Math.min(index - BATCH2_START, BATCH2_DOT_COUNT - 1),
-  };
-}
-
-function getSlideIndexFromDot(dotIndex, currentIndex) {
-  if (currentIndex < BATCH2_START) {
-    return dotIndex;
-  }
-  return BATCH2_START + dotIndex;
-}
 
 const OnboardingScreen = ({ navigation }) => {
   const listRef = useRef(null);
@@ -40,7 +25,8 @@ const OnboardingScreen = ({ navigation }) => {
   const isLast = index === ONBOARDING_SLIDES.length - 1;
   const currentSlide = ONBOARDING_SLIDES[index];
   const useWelcomeFooter = currentSlide.footer === FOOTER.welcome;
-  const pagination = getPaginationState(index);
+  const showPagination = shouldShowOnboardingPagination(index);
+  const pagination = getOnboardingPagination(index);
   const nextLabel = currentSlide.nextLabel ?? 'Next';
 
   const goNext = useCallback(() => {
@@ -58,14 +44,11 @@ const OnboardingScreen = ({ navigation }) => {
     setIndex(nextIndex);
   }, []);
 
-  const goToSlide = useCallback(
-    dotIndex => {
-      const target = getSlideIndexFromDot(dotIndex, index);
-      listRef.current?.scrollToIndex({ index: target, animated: true });
-      setIndex(target);
-    },
-    [index],
-  );
+  const goToSlide = useCallback(dotIndex => {
+    const target = getOnboardingSlideIndexForDot(dotIndex);
+    listRef.current?.scrollToIndex({ index: target, animated: true });
+    setIndex(target);
+  }, []);
 
   return (
     <SafeAreaView style={styles.root} edges={['top', 'bottom']}>
@@ -100,20 +83,22 @@ const OnboardingScreen = ({ navigation }) => {
         />
 
         {!useWelcomeFooter ? (
-        <View style={[styles.footer, styles.footerStandard]}>
-          <OnboardingPagination
-            count={pagination.count}
-            index={pagination.index}
-            onSelect={goToSlide}
-          />
-          <Button
-            label={nextLabel}
-            onPress={goNext}
-            height={52}
-            btnStyle={styles.nextBtn}
-            textStyle={styles.nextBtnText}
-          />
-        </View>
+          <View style={[styles.footer, styles.footerStandard]}>
+            {showPagination && pagination ? (
+              <OnboardingPagination
+                count={pagination.count}
+                index={pagination.index}
+                onSelect={goToSlide}
+              />
+            ) : null}
+            <Button
+              label={nextLabel}
+              onPress={goNext}
+              height={52}
+              btnStyle={styles.nextBtn}
+              textStyle={styles.nextBtnText}
+            />
+          </View>
         ) : null}
       </View>
     </SafeAreaView>

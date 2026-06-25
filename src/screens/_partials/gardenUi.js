@@ -18,27 +18,39 @@ export const G = {
   accent: '#D0EC7E',
 };
 
+export const CARD_SHADOW = {
+  shadowColor: '#1A3020',
+  shadowOffset: { width: 0, height: 3 },
+  shadowOpacity: 0.06,
+  shadowRadius: 12,
+  elevation: 3,
+};
+
+export const CARD_LIFT_SHADOW = {
+  shadowColor: '#1A3020',
+  shadowOffset: { width: 0, height: 5 },
+  shadowOpacity: 0.1,
+  shadowRadius: 18,
+  elevation: 5,
+};
+
 export const gardenUi = StyleSheet.create({
   page: { flex: 1, backgroundColor: G.cream },
   scrollPad: { paddingBottom: Sizer.vSize(24) },
   pageX: { paddingHorizontal: Sizer.hSize(16) },
   card: {
-    borderRadius: 8,
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#1A3020',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    borderRadius: 12,
+    backgroundColor: G.cream,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: G.divider,
+    ...CARD_SHADOW,
   },
   cardLift: {
-    borderRadius: 8,
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#1A3020',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 4,
+    borderRadius: 14,
+    backgroundColor: G.cream,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: G.divider,
+    ...CARD_LIFT_SHADOW,
   },
   imgR: { borderRadius: 6 },
 });

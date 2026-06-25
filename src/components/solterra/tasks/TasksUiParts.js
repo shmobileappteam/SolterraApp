@@ -79,3 +79,28 @@ export const IconSun = ({ size = 28 }) => (
     />
   </Svg>
 );
+
+export const IconWheelbarrow = ({ size = 16, color = G.sage }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path d="M3 17h11M3 17a2 2 0 100 4h11M3 17l3-9h9l2 5" {...stroke(color, 1.5)} />
+    <Circle cx="6" cy="19" r="1.5" fill={color} />
+    <Circle cx="12" cy="19" r="1.5" fill={color} />
+  </Svg>
+);
+
+export const IconSearch = ({ size = 16, color = G.sage }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Circle cx="11" cy="11" r="6" {...stroke(color, 1.5)} />
+    <Path d="M16 16l4 4" {...stroke(color, 1.5)} />
+  </Svg>
+);
+
+export const IconIrrigation = ({ size = 16, color = G.forest }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path d="M4 12h6M14 12h6M4 12v4M10 12v4M14 12v4M20 12v4" {...stroke(color, 1.5)} />
+    <Circle cx="4" cy="18" r="1.5" fill={color} />
+    <Circle cx="10" cy="18" r="1.5" fill={color} />
+    <Circle cx="14" cy="18" r="1.5" fill={color} />
+    <Circle cx="20" cy="18" r="1.5" fill={color} />
+  </Svg>
+);

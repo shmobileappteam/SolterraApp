@@ -24,6 +24,8 @@ const InviteHouseholdScreen = ({ navigation }) => {
   return (
     <SetupFlowLayout
       centered
+      setupRoute="InviteHouseholdScreen"
+      navigation={navigation}
       title="Invite your household to garden together."
       subtitle="Add people you live with so you can plan and grow together."
       subtitleColor={ONBOARDING_UI.text}

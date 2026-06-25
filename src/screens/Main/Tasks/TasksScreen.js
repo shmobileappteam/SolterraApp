@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import {
   Image,
+  Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -17,12 +17,15 @@ import {
   IconCircleEmpty,
   IconDroplet,
   IconFlame,
+  IconIrrigation,
   IconLeaf,
+  IconSearch,
   IconSprout,
   IconSun,
+  IconWheelbarrow,
 } from '../../../components/solterra/tasks/TasksUiParts';
-import { heroGarden, lesson1, lesson2 } from '../../../assets/images';
-import { CARD_GAP, G, gardenUi } from '../../_partials/gardenUi';
+import { lesson1, taskTomatoes, taskWaterBeds } from '../../../assets/images';
+import { G, gardenUi } from '../../_partials/gardenUi';
 import Sizer from '../../../helpers/Sizer';
 
 const WEEK_DAYS = [
@@ -36,82 +39,112 @@ const WEEK_DAYS = [
 ];
 
 const STREAK_DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-const STREAK_DONE = 5;
+const STREAK_DONE = 6;
 
 const TODAYS_TASKS = [
   {
+    id: 'water',
     Icon: IconDroplet,
     title: 'Water raised beds',
     sub: 'Vegetables • 2 beds',
     meta: 'Due today',
-    img: heroGarden,
+    img: taskWaterBeds,
+    iconBg: '#E6F0FA',
   },
   {
+    id: 'seedlings',
     Icon: IconSprout,
     title: 'Check seedlings',
     sub: 'Greenhouse • Tray 3',
-    meta: '15 min',
+    meta: 'Due today',
     img: lesson1,
+    iconBg: '#E8F0E6',
   },
   {
-    Icon: IconLeaf,
+    id: 'fertilize',
+    Icon: IconIrrigation,
     title: 'Fertilize tomatoes',
     sub: 'Raised beds',
-    meta: 'This week',
-    img: lesson2,
+    meta: 'Due today',
+    img: taskTomatoes,
+    iconBg: '#EEF0EA',
   },
 ];
 
 const UPCOMING_TASKS = [
   {
-    Icon: () => <Text style={{ fontSize: 16 }}>🍅</Text>,
-    title: 'Harvest cherry tomatoes',
-    sub: 'Backyard • Row A',
-    meta: 'Sat',
+    id: 'mulch',
+    Icon: IconWheelbarrow,
+    title: 'Add mulch to pathways',
+    sub: 'Paths • Front garden',
+    meta: 'Tomorrow',
+    iconBg: '#E8F0E6',
   },
   {
-    Icon: IconLeaf,
-    title: 'Mulch pathways',
+    id: 'basil',
+    Icon: IconSprout,
+    title: 'Plant basil seedlings',
+    sub: 'Herb garden',
+    meta: 'Fri, May 17',
+    iconBg: '#E8F0E6',
+  },
+  {
+    id: 'pests',
+    Icon: IconSearch,
+    title: 'Inspect for pests',
     sub: 'Full garden',
-    meta: 'Next week',
+    meta: 'Fri, May 17',
+    iconBg: '#E8F0E6',
   },
 ];
 
-const TaskSection = ({ title, badge, tasks, showThumb, onTask, onBadge }) => (
-  <View>
+const TaskRow = ({ task, showThumb, onPress }) => (
+  <Pressable
+    style={({ pressed }) => [styles.taskRow, pressed && styles.taskRowPressed]}
+    onPress={onPress}>
+    <View style={[styles.taskIconBox, { backgroundColor: task.iconBg }]}>
+      <task.Icon size={17} />
+    </View>
+    <View style={styles.taskCopy}>
+      <Typography size={13} color={G.forest} style={styles.taskTitle}>
+        {task.title}
+      </Typography>
+      <Typography size={11} color={G.muted} mT={2}>
+        {task.sub}
+      </Typography>
+      <Typography size={10} color={G.muted} mT={3}>
+        {task.meta}
+      </Typography>
+    </View>
+    {showThumb && task.img ? (
+      <View style={styles.thumbWrap}>
+        <Image source={task.img} style={styles.thumb} resizeMode="cover" />
+      </View>
+    ) : null}
+    <IconCircleEmpty size={20} color={G.muted} />
+  </Pressable>
+);
+
+const TaskSection = ({ title, badge, tasks, showThumb, onTask, onBadge, footer }) => (
+  <View style={styles.sectionBlock}>
     <View style={styles.sectionHead}>
       <Typography size={14} color={G.forest} style={{ fontWeight: '600' }}>
         {title}
       </Typography>
       <TouchableOpacity style={styles.badge} onPress={onBadge} activeOpacity={0.8}>
-        <Typography size={10} color={G.sage} style={{ fontWeight: '500' }}>
+        <Typography size={11} color={G.sage} style={{ fontWeight: '600' }}>
           {badge}
         </Typography>
       </TouchableOpacity>
     </View>
-    <View style={gardenUi.card}>
+    <View style={styles.homeCard}>
       {tasks.map((t, i) => (
-        <TouchableOpacity
-          key={t.title}
-          style={[styles.taskRow, i > 0 && styles.taskDivider]}
-          onPress={onTask}
-          activeOpacity={0.88}>
-          <View style={styles.taskIconBox}>
-            <t.Icon />
-          </View>
-          <View style={styles.taskCopy}>
-            <Typography size={13} color={G.forest} style={{ fontWeight: '600' }}>
-              {t.title}
-            </Typography>
-            <Typography size={11} color={G.muted}>{t.sub}</Typography>
-          </View>
-          {showThumb && t.img ? <Image source={t.img} style={styles.thumb} /> : null}
-          <Typography size={11} color={G.muted} style={styles.taskMeta}>
-            {t.meta}
-          </Typography>
-          <IconCircleEmpty size={20} />
-        </TouchableOpacity>
+        <View key={t.id}>
+          {i > 0 ? <View style={styles.taskDivider} /> : null}
+          <TaskRow task={t} showThumb={showThumb} onPress={onTask} />
+        </View>
       ))}
+      {footer}
     </View>
   </View>
 );
@@ -127,7 +160,7 @@ const TasksScreen = ({ navigation }) => {
       header={
         <View style={styles.headerRow}>
           <View>
-            <Typography size={28} color={G.forest} style={styles.pageTitle}>
+            <Typography size={22} color={G.forest} style={styles.pageTitle}>
               Tasks
             </Typography>
             <Typography size={13} color={G.muted} mT={2}>
@@ -138,224 +171,242 @@ const TasksScreen = ({ navigation }) => {
             style={styles.calBtn}
             onPress={goCalendar}
             accessibilityLabel="Open calendar">
-            <IconCalendar />
+            <IconCalendar size={20} />
           </TouchableOpacity>
         </View>
       }>
-        <View style={gardenUi.pageX}>
-          <WeekCalendarStrip
-            days={WEEK_DAYS}
-            selectedIndex={selectedDay}
-            onSelectDay={setSelectedDay}
-          />
-        </View>
+      <View style={gardenUi.pageX}>
+        <WeekCalendarStrip
+          days={WEEK_DAYS}
+          selectedIndex={selectedDay}
+          onSelectDay={setSelectedDay}
+        />
+      </View>
 
-        <View style={[gardenUi.pageX, styles.body]}>
-          <TaskSection
-            title="Today's Tasks"
-            badge="3 tasks"
-            showThumb
-            tasks={TODAYS_TASKS}
-            onTask={goDetail}
-            onBadge={goCalendar}
-          />
+      <View style={[gardenUi.pageX, styles.body]}>
+        <TaskSection
+          title="Today's Tasks"
+          badge="3 tasks"
+          showThumb
+          tasks={TODAYS_TASKS}
+          onTask={goDetail}
+          onBadge={goCalendar}
+        />
 
-          <TaskSection
-            title="Upcoming"
-            badge="2 tasks"
-            tasks={UPCOMING_TASKS}
-            onTask={goDetail}
-            onBadge={goCalendar}
-          />
+        <TaskSection
+          title="Upcoming"
+          badge="5 tasks"
+          tasks={UPCOMING_TASKS}
+          onTask={goDetail}
+          onBadge={goCalendar}
+          footer={
+            <Pressable
+              style={({ pressed }) => [styles.viewAllRow, pressed && styles.viewAllPressed]}
+              onPress={goCalendar}>
+              <Typography size={12} color={G.forest} style={{ fontWeight: '500' }}>
+                View all upcoming
+              </Typography>
+              <ChevronRight size={14} color={G.forest} />
+            </Pressable>
+          }
+        />
 
-          <TouchableOpacity style={styles.streakCard} activeOpacity={0.88} onPress={goCalendar}>
-            <View style={styles.streakLeft}>
-              <IconFlame />
-              <View style={styles.streakCopy}>
-                <Typography size={13} color={G.forest} style={{ fontWeight: '600' }}>
-                  8 day streak
+        <Pressable
+          style={({ pressed }) => [styles.streakCard, pressed && styles.widgetPressed]}
+          onPress={goCalendar}>
+          <View style={styles.streakLeft}>
+            <IconFlame size={24} />
+            <View style={styles.streakCopy}>
+              <View style={styles.streakNumberRow}>
+                <Typography size={22} color={G.forest} style={styles.streakNumber}>
+                  8
                 </Typography>
-                <Typography size={11} color={G.muted}>Great job!</Typography>
-              </View>
-            </View>
-            <View style={styles.streakDays}>
-              {STREAK_DAYS.map((d, i) => (
-                <View key={`${d}-${i}`} style={styles.streakDayCol}>
-                  <Typography size={8} color={G.muted}>{d}</Typography>
-                  {i < STREAK_DONE ? (
-                    <View style={styles.streakCheck}>
-                      <IconCheck size={10} />
-                    </View>
-                  ) : (
-                    <IconCircleEmpty size={16} />
-                  )}
-                </View>
-              ))}
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[gardenUi.card, styles.alertCard]}
-            activeOpacity={0.88}
-            onPress={() => navigation.navigate('AskSolScreen')}>
-            <View style={styles.alertCopy}>
-              <Typography size={13} color={G.forest} style={{ fontWeight: '600' }}>
-                Climate Alert
-              </Typography>
-              <Typography size={11} color={G.muted} mT={4} style={{ lineHeight: 16 }}>
-                Heat advisory in effect. Water early morning and mulch to retain moisture.
-              </Typography>
-            </View>
-            <IconSun size={32} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[gardenUi.card, styles.tipCard]}
-            activeOpacity={0.88}
-            onPress={() => navigation.navigate('GardenScreen')}>
-            <View style={styles.alertCopy}>
-              <Typography size={13} color={G.forest} style={{ fontWeight: '600' }}>
-                Seasonal Tip
-              </Typography>
-              <Typography size={11} color={G.muted} mT={4} style={{ lineHeight: 16 }}>
-                Plant heat-loving crops and add shade cloth as temps rise.
-              </Typography>
-            </View>
-            <Text style={styles.tipEmoji}>🪴</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[gardenUi.card, styles.weatherCard]}
-            activeOpacity={0.88}
-            onPress={() => navigation.navigate('HomeScreen')}>
-            <View style={styles.weatherLeft}>
-              <IconSun size={28} />
-              <View style={styles.weatherTemps}>
-                <Typography size={13} color={G.forest} style={{ fontWeight: '600' }}>
-                  82°F Mostly Sunny
+                <Typography size={13} color={G.forest} style={{ fontWeight: '600', marginLeft: 4 }}>
+                  day streak
                 </Typography>
-                <Typography size={11} color={G.muted}>H 84° / L 68°</Typography>
               </View>
-            </View>
-            <View style={styles.weatherDivider} />
-            <View style={styles.weatherRight}>
-              <Typography size={11} color={G.muted} style={styles.weatherNote}>
-                No rain expected. Perfect day to garden!
+              <Typography size={11} color={G.muted} mT={2}>
+                Great job!
               </Typography>
-              <ChevronRight size={16} />
             </View>
-          </TouchableOpacity>
-        </View>
+          </View>
+          <View style={styles.streakDays}>
+            {STREAK_DAYS.map((d, i) => (
+              <View key={`${d}-${i}`} style={styles.streakDayCol}>
+                <Typography size={8} color={G.muted} style={{ fontWeight: '500' }}>
+                  {d}
+                </Typography>
+                {i < STREAK_DONE ? (
+                  <View style={styles.streakCheck}>
+                    <IconCheck size={9} color="#fff" />
+                  </View>
+                ) : (
+                  <IconCircleEmpty size={18} color={G.muted} />
+                )}
+              </View>
+            ))}
+          </View>
+        </Pressable>
+
+        <Pressable
+          style={({ pressed }) => [
+            styles.homeCard,
+            styles.weatherCard,
+            pressed && styles.widgetPressed,
+          ]}
+          onPress={() => navigation.navigate('HomeScreen')}>
+          <View style={styles.weatherLeft}>
+            <IconSun size={26} />
+            <View style={styles.weatherTemps}>
+              <Typography size={20} color={G.forest} style={styles.weatherDeg}>
+                82°F
+              </Typography>
+              <Typography size={12} color={G.forest} style={{ fontWeight: '500' }}>
+                Mostly Sunny
+              </Typography>
+              <Typography size={10} color={G.muted} mT={3}>
+                Low 58° • High 84°
+              </Typography>
+            </View>
+          </View>
+          <View style={styles.weatherDivider} />
+          <View style={styles.weatherRight}>
+            <View style={styles.weatherNoteWrap}>
+              <Typography size={11} color={G.forest} style={{ fontWeight: '600' }}>
+                No rain expected
+              </Typography>
+              <Typography size={10} color={G.muted} mT={3}>
+                Good day for outdoor tasks.
+              </Typography>
+            </View>
+            <ChevronRight size={14} color={G.muted} />
+          </View>
+        </Pressable>
+      </View>
     </TabScreenLayout>
   );
 };
 
 const styles = StyleSheet.create({
-  pageTitle: { fontWeight: '700', lineHeight: Sizer.fS(32) },
+  pageTitle: { fontWeight: '700', lineHeight: Sizer.fS(28) },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    paddingBottom: 8,
+    paddingBottom: 6,
   },
   calBtn: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
-  body: { gap: CARD_GAP, marginTop: 4, paddingBottom: 8 },
+  body: { gap: 14, marginTop: 4, paddingBottom: 12 },
+  sectionBlock: { gap: 8 },
   sectionHead: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
   },
   badge: {
     backgroundColor: G.sageLight,
     borderRadius: 999,
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
     paddingVertical: 4,
+  },
+  homeCard: {
+    ...gardenUi.card,
+    borderRadius: 16,
+    overflow: 'hidden',
   },
   taskRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
     gap: 10,
   },
-  taskDivider: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: G.divider },
+  taskRowPressed: { opacity: 0.88 },
+  taskDivider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: G.divider,
+    marginHorizontal: 14,
+  },
   taskIconBox: {
     width: 36,
     height: 36,
-    borderRadius: 8,
-    backgroundColor: G.sageLight,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
   },
   taskCopy: { flex: 1, minWidth: 0 },
-  thumb: { width: 40, height: 40, borderRadius: 6 },
-  taskMeta: { flexShrink: 0 },
+  taskTitle: { fontWeight: '600', lineHeight: Sizer.fS(17) },
+  thumbWrap: {
+    width: 52,
+    height: 40,
+    borderRadius: 10,
+    overflow: 'hidden',
+    backgroundColor: G.cardTint,
+    flexShrink: 0,
+  },
+  thumb: { width: '100%', height: '100%' },
+  viewAllRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    paddingVertical: 14,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: G.divider,
+  },
+  viewAllPressed: { opacity: 0.85 },
   streakCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 12,
-    borderRadius: 8,
-    backgroundColor: G.sageLight,
+    padding: 14,
+    borderRadius: 16,
+    backgroundColor: G.sageBanner,
+    gap: 10,
   },
+  widgetPressed: { opacity: 0.92 },
   streakLeft: { flexDirection: 'row', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 },
   streakCopy: { flex: 1 },
-  streakDays: { flexDirection: 'row', gap: 4 },
-  streakDayCol: { alignItems: 'center', gap: 2 },
+  streakNumberRow: { flexDirection: 'row', alignItems: 'baseline' },
+  streakNumber: { fontWeight: '700', lineHeight: Sizer.fS(26) },
+  streakDays: { flexDirection: 'row', gap: 5 },
+  streakDayCol: { alignItems: 'center', gap: 4 },
   streakCheck: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
     backgroundColor: G.sage,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  alertCard: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    padding: 12,
-    gap: 12,
-    backgroundColor: G.sageLight,
-  },
-  alertCopy: { flex: 1, minWidth: 0 },
-  tipCard: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    padding: 12,
-    gap: 12,
-    backgroundColor: G.sageLight,
-  },
-  tipEmoji: { fontSize: 24 },
   weatherCard: {
     flexDirection: 'row',
     alignItems: 'stretch',
     overflow: 'hidden',
-    backgroundColor: G.sageLight,
   },
   weatherLeft: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 12,
+    padding: 14,
     gap: 10,
   },
   weatherTemps: { flex: 1, minWidth: 0 },
+  weatherDeg: { fontWeight: '700', lineHeight: Sizer.fS(24) },
   weatherDivider: {
     width: StyleSheet.hairlineWidth,
     backgroundColor: G.divider,
-    marginVertical: 8,
+    marginVertical: 12,
   },
   weatherRight: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 12,
-    gap: 6,
+    padding: 14,
+    gap: 8,
   },
-  weatherNote: { flex: 1, lineHeight: 16 },
+  weatherNoteWrap: { flex: 1, minWidth: 0 },
 });
 
 export default TasksScreen;

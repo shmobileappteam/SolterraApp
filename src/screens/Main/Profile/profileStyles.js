@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { FONTS, SHADOWS, SPACING } from '../../../globalStyle/Theme';
 import Sizer from '../../../helpers/Sizer';
-import { G } from '../../_partials/gardenUi';
+import { G, gardenUi } from '../../_partials/gardenUi';
 
 export const profileStyles = StyleSheet.create({
   page: {
@@ -78,20 +78,16 @@ export const profileStyles = StyleSheet.create({
     marginTop: 16,
   },
   statBox: {
+    ...gardenUi.card,
     flex: 1,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: G.divider,
     padding: 10,
     alignItems: 'center',
-    ...SHADOWS.soft,
   },
   subCard: {
     marginHorizontal: Sizer.hSize(16),
     marginTop: 16,
     backgroundColor: G.primary,
-    borderRadius: 8,
+    borderRadius: 12,
     padding: 16,
     overflow: 'hidden',
     ...SHADOWS.card,
@@ -124,12 +120,8 @@ export const profileStyles = StyleSheet.create({
     marginTop: 20,
   },
   settingsCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: G.divider,
+    ...gardenUi.card,
     overflow: 'hidden',
-    ...SHADOWS.soft,
   },
   settingsRow: {
     flexDirection: 'row',

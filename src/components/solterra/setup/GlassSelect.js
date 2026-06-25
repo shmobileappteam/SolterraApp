@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 import { ChevronDown } from '../garden/GardenUiParts';
 import { trellisAuthStyles, T } from '../../../screens/_partials/trellisAuthUi';
+import { G } from '../../../screens/_partials/gardenUi';
 import { FONTS } from '../../../globalStyle/Theme';
 import Sizer from '../../../helpers/Sizer';
 
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.body,
   },
   optionsCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: G.cream,
     borderRadius: 14,
     overflow: 'hidden',
   },
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
   checkSpacer: { width: 18 },
   cancelBtn: {
     marginTop: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: G.cream,
     borderRadius: 14,
     paddingVertical: 16,
     alignItems: 'center',

@@ -11,7 +11,7 @@ export default function OnboardingPagination({ count, index, onSelect }) {
           onPress={() => onSelect?.(i)}
           hitSlop={8}
           accessibilityRole="button"
-          accessibilityLabel={`Go to slide ${i + 1}`}
+          accessibilityLabel={`Go to step ${i + 1} of ${count}`}
           accessibilityState={{ selected: i === index }}>
           <View style={[styles.dot, i === index ? styles.dotActive : styles.dotMuted]} />
         </Pressable>

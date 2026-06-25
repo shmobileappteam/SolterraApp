@@ -20,6 +20,10 @@ export const solterraLogoOnboard = require('./soliterra-logo-onboard.png');
 export const communityPost1 = require('./community-post-1.png');
 export const communityPost2 = require('./community-post-2.png');
 
+export const communityAvatarEmma = require('./community/avatar-emma.png');
+export const communityAvatarJames = require('./community/avatar-james.png');
+export const communityChallengePollinator = require('./community/challenge-pollinator.png');
+
 // Onboarding illustrations — drop PNGs in onboard/ and wire into onboardingSlides.js
 export const onboard01 = require('./onboard/onboard-01.png');
 export const onboard02 = require('./onboard/onboard-02.png');
@@ -78,6 +82,30 @@ export const plantsFlowers01 = require('./account/flowers-01.png');
 export const plantsFlowers02 = require('./account/flowers-02.png');
 export const plantsFlowers03 = require('./account/flowers-03.png');
 export const plantsFlowers04 = require('./account/flowers-04.png');
+
+export const planBackyardFoodGarden = require('./garden/plan-backyard-food-garden.png');
+export const planGreenhouseLayout = require('./garden/plan-greenhouse-layout.png');
+export const planFrontYardXeriscape = require('./garden/plan-front-yard-xeriscape.png');
+export const plan2dLayoutPreview = require('./garden/plan-2d-layout-preview.png');
+
+export const projectGreenhouse = require('./garden/project-greenhouse.png');
+export const projectIrrigation = require('./garden/project-irrigation.png');
+export const projectRaisedBeds = require('./garden/project-raised-beds.png');
+export const projectXeriscape = require('./garden/project-xeriscape.png');
+
+export const diagLeafSpotHero = require('./garden/diag-leaf-spot-hero.png');
+export const diagTomatoThumb = require('./garden/diag-tomato-thumb.png');
+export const diagCucumberThumb = require('./garden/diag-cucumber-thumb.png');
+export const diagPepperThumb = require('./garden/diag-pepper-aphids-thumb.png');
+
+export const taskWaterBeds = require('./garden/task-water-beds.png');
+export const taskTomatoes = require('./garden/task-tomatoes.png');
+
+export const shopDripKit = require('./shop/shop-drip-kit.png');
+export const shopRaisedBed = require('./shop/shop-raised-bed.png');
+export const shopSoilBag = require('./shop/shop-soil-bag.png');
+export const shopGreenhouseKit = require('./shop/shop-greenhouse-kit.png');
+export const shopGardenProfile = require('./shop/shop-garden-profile.png');
 // export const onboardingWelcome = require('./onboarding-welcome.png');
 // export const onboardingDreamGarden = require('./onboarding-dream-garden.png');
 // export const onboardingSmartRecommendations = require('./onboarding-smart-recommendations.png');

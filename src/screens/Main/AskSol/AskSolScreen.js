@@ -15,7 +15,7 @@ import Typography from '../../../atomComponents/Typography';
 import { IconCamera, IconInfo, IconSend } from '../../../components/solterra/ask/AskSolUiParts';
 import { plant1, solMascot } from '../../../assets/images';
 import { COLORS, FONTS, SHADOWS } from '../../../globalStyle/Theme';
-import { G } from '../../_partials/gardenUi';
+import { G, gardenUi } from '../../_partials/gardenUi';
 import Sizer from '../../../helpers/Sizer';
 
 const PROMPTS = [
@@ -89,7 +89,7 @@ const AskSolScreen = ({ navigation, route }) => {
               </View>
             </View>
 
-            <View style={styles.diagnosisCard}>
+            <View style={[styles.diagnosisCard]}>
               <View style={styles.diagnosisHead}>
                 <Image source={plant1} style={styles.diagnosisImg} />
                 <View style={styles.diagnosisCopy}>
@@ -223,23 +223,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   solBubble: {
+    ...gardenUi.card,
     maxWidth: '78%',
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: G.divider,
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 16,
     borderBottomLeftRadius: 4,
   },
   diagnosisCard: {
+    ...gardenUi.card,
     marginLeft: 40,
-    backgroundColor: '#FFFFFF',
     borderLeftWidth: 4,
     borderLeftColor: COLORS.accent,
     borderRadius: 16,
     padding: 16,
-    ...SHADOWS.soft,
     marginBottom: 12,
   },
   solBubbleText: { fontSize: 14, color: G.forest, lineHeight: 20 },
@@ -263,9 +260,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   typingBubble: {
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: G.divider,
+    ...gardenUi.card,
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 16,
@@ -302,14 +297,11 @@ const styles = StyleSheet.create({
   },
   promptList: { width: '100%', marginTop: 24, gap: 10 },
   promptChip: {
+    ...gardenUi.card,
     width: '100%',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 16,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: G.divider,
-    ...SHADOWS.soft,
   },
   inputBar: {
     paddingHorizontal: 16,
@@ -317,16 +309,15 @@ const styles = StyleSheet.create({
     backgroundColor: G.cream,
   },
   inputInner: {
+    ...gardenUi.cardLift,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
     borderRadius: 999,
-    borderWidth: 1,
-    borderColor: G.divider,
     height: 56,
     paddingHorizontal: 12,
     gap: 8,
-    ...SHADOWS.card,
+    borderWidth: 1,
+    borderColor: G.divider,
   },
   camBtn: {
     width: 36,
