@@ -14,3 +14,13 @@ export const heroShop = require('./hero-shop.jpg');
 export const tools1 = require('./tools-1.jpg');
 export const fert1 = require('./fert-1.jpg');
 export const solMascot = require('./sol-mascot.png');
+export const solterraGreenLogo = require('./solterra-green-logo.png');
+export const solterraWhiteLogo = require('./soliterra-white-logo.png');
+
+// Onboarding illustrations — drop PNGs here and wire into onboardingSlides.js
+// export const onboardingWelcome = require('./onboarding-welcome.png');
+// export const onboardingDreamGarden = require('./onboarding-dream-garden.png');
+// export const onboardingSmartRecommendations = require('./onboarding-smart-recommendations.png');
+// export const onboardingCustomPlan = require('./onboarding-custom-plan.png');
+// export const onboardingConfidence = require('./onboarding-confidence.png');
+// export const onboardingMonthlyAudit = require('./onboarding-monthly-audit.png');

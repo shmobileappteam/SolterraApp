@@ -6,6 +6,19 @@ import {
   AuthWelcomeScreen,
   SignInScreen,
   SignUpScreen,
+  ChoosePlanScreen,
+  InviteHouseholdScreen,
+  ConnectExperienceScreen,
+  PlanIntroScreen,
+  PlanAboutYouScreen,
+  PlanAnalyzingScreen,
+  PlanFindingsReviewScreen,
+  PlanRecommendedStyleScreen,
+  PlanPlantsChosenScreen,
+  PlanReviewSummaryScreen,
+  PlanBuildingScreen,
+  PlanBlueprintRevealScreen,
+  PlanDashboardHandoffScreen,
   PreferencesScreen,
   AskSolScreen,
   LearnScreen,
@@ -51,7 +64,7 @@ const StackNavigator = () => {
       <Stack.Screen
         name="OnboardingScreen"
         component={OnboardingScreen}
-        options={{ contentStyle: { backgroundColor: 'transparent' } }}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
       />
       <Stack.Screen
         name="AuthWelcomeScreen"
@@ -66,6 +79,71 @@ const StackNavigator = () => {
       <Stack.Screen
         name="SignUpScreen"
         component={SignUpScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="ChoosePlanScreen"
+        component={ChoosePlanScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="InviteHouseholdScreen"
+        component={InviteHouseholdScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="ConnectExperienceScreen"
+        component={ConnectExperienceScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanIntroScreen"
+        component={PlanIntroScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanAboutYouScreen"
+        component={PlanAboutYouScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanAnalyzingScreen"
+        component={PlanAnalyzingScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanFindingsReviewScreen"
+        component={PlanFindingsReviewScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanRecommendedStyleScreen"
+        component={PlanRecommendedStyleScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanPlantsChosenScreen"
+        component={PlanPlantsChosenScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanReviewSummaryScreen"
+        component={PlanReviewSummaryScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanBuildingScreen"
+        component={PlanBuildingScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanBlueprintRevealScreen"
+        component={PlanBlueprintRevealScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanDashboardHandoffScreen"
+        component={PlanDashboardHandoffScreen}
         options={{ contentStyle: { backgroundColor: G.cream } }}
       />
       <Stack.Screen name="PreferencesScreen" component={PreferencesScreen} />

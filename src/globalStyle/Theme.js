@@ -30,11 +30,7 @@ const COLORS = {
   yellow300: '#FDE047',
   /** Cream splash mock */
   splashBg: '#F9F8F3',
-  splashLogoCard: '#F3EFE6',
   splashForest: '#1B3022',
-  splashLeafGreen: '#3D6B4F',
-  splashLeafLight: '#6B9B75',
-  splashDotActive: '#8FA888',
   splashDotMuted: '#D0DDD0',
 };
 

@@ -4,8 +4,6 @@ import BottomNav from './layout/BottomNav';
 import TabScreenLayout from './layout/TabScreenLayout';
 import PlaceholderImage from './solterra/PlaceholderImage';
 import SectionHeader from './solterra/SectionHeader';
-import { SolterraLogo, SolMark } from './solterra/SolLogo';
-
 export {
   Button,
   TextField,
@@ -13,6 +11,4 @@ export {
   TabScreenLayout,
   PlaceholderImage,
   SectionHeader,
-  SolterraLogo,
-  SolMark,
 };

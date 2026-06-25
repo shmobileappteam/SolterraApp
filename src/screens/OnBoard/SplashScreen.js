@@ -11,7 +11,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import TrellisSplashLogo from '../../components/solterra/TrellisSplashLogo';
 import SplashSoftWave from '../../components/solterra/SplashSoftWave';
-import SplashPageDots from '../../components/solterra/SplashPageDots';
 import Typography from '../../atomComponents/Typography';
 import { COLORS, FONTS } from '../../globalStyle/Theme';
 import { G } from '../_partials/gardenUi';
@@ -69,7 +68,7 @@ const SplashScreen = ({ navigation }) => {
               transform: [{ translateY: floatY }],
               alignItems: 'center',
             }}>
-            <TrellisSplashLogo />
+            <TrellisSplashLogo size="splash" />
             <Typography
               size={17}
               color={COLORS.splashForest}
@@ -78,17 +77,6 @@ const SplashScreen = ({ navigation }) => {
               Grow something beautiful.
             </Typography>
           </Animated.View>
-        </View>
-
-        <View style={[styles.footer, { paddingBottom: waveHeight * 0.55 + 8 }]}>
-          <SplashPageDots />
-          <Typography
-            size={10}
-            color={COLORS.textMuted}
-            textAlign="center"
-            style={styles.gardenSystems}>
-            GARDEN SYSTEMS
-          </Typography>
         </View>
       </View>
     </Pressable>
@@ -116,16 +104,6 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     fontFamily: FONTS.display,
     opacity: 0.92,
-  },
-  footer: {
-    alignItems: 'center',
-    gap: 14,
-  },
-  gardenSystems: {
-    fontFamily: FONTS.label,
-    letterSpacing: 4.5,
-    textTransform: 'uppercase',
-    opacity: 0.75,
   },
 });
 

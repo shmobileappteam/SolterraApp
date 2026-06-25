@@ -1,0 +1,63 @@
+---
+description: Conventions for Trellis onboarding slides (screens 1–6 and future 7–12)
+globs: src/screens/OnBoard/**,src/components/solterra/Onboarding*
+alwaysApply: false
+---
+
+# Onboarding screen conventions
+
+Follow these patterns for **all onboarding slides** — current six and the next six.
+
+## Architecture
+
+- **One layout component**: `OnboardingSlide.js` — never create a per-screen component.
+- **Data-only slides**: add entries to `ONBOARDING_SLIDES` in `onboardingSlides.js`.
+- **Pager**: `OnboardingScreen.js` — horizontal `FlatList` + fixed footer (dots + Next).
+- **Tokens**: `onboardingUi.js` maps to theme (`G`, `COLORS`, `SPACING`, `RADIUS`) — **never inline hex**.
+
+## Layout rules
+
+- **No `ScrollView`** anywhere — flex-only; content must fit without scrolling.
+- **Only the image area uses `flex: 1`**; heading, subtext, lists, footer are fixed height.
+- **Horizontal padding**: `ONBOARDING_UI.padX` on all content **including top image** (`topImageSection`).
+- **Screen background**: `ONBOARDING_UI.cream` everywhere — **no card/surface boxes** behind lists or feature groups.
+
+## Images
+
+- Always use `OnboardingImagePlaceholder` (rounded, dashed placeholder, `IMAGE` label, `resizeMode="cover"` when sourced).
+- Set `imageSource: null` until PNG wired in `assets/images/index.js`.
+- `imagePosition`: `top` | `middle` | `bottom` | `none`.
+- Bounds from `ONBOARDING_IMAGE` in `onboardingUi.js` (`minHeight` / `maxHeight` / `borderRadius`).
+
+## Text & lists
+
+- **Heading**: serif (`FONTS.display`), `ONBOARDING_UI.green`, ~24px centered or ~26px left.
+- **Body**: sans, `ONBOARDING_UI.text`, 14px; centered slides may use `bodyMaxWidthRatio: 0.85`.
+- **Welcome only**: `intro`, `showLogo: true` (`TrellisWordmark`), `footer: FOOTER.welcome`, `titleSize: 20`.
+- **List variants** (`listVariant`):
+  - `iconList` — icon + label rows via `bullets` or `featureBox: { title, items }` (plain, no card bg).
+  - `checklist` — ✓ + label via `checklist: string[]`.
+- Optional `lead` before list (left or center per `contentAlign`).
+
+## Footer
+
+- **Standard** (`FOOTER.standard`): pagination dots + full-width Next button (~52px, `ONBOARDING_UI.primary`).
+- **Welcome** (`FOOTER.welcome`): compact Next only, no dots, aligned right.
+
+## Adding slides 7–12
+
+Append to `ONBOARDING_SLIDES`. Batch 2 (slides 7–12) uses **5 pagination dots** (screens 11–12 both show dot 5 active). Screen 12 uses `nextLabel: 'Continue'`.
+
+Preview UI blocks (screens 8–12): set `blockVariant` + `previewBlock` data — rendered by `OnboardingPreviewBlocks.js` using theme card styles (`cardBg`, `cardBorder`). Screen 7 uses plain `listHeading` + icon rows (no card).
+
+## Adding more slides
+
+| File | Role |
+|------|------|
+| `onboardingSlides.js` | Slide copy + config |
+| `OnboardingSlide.js` | Shared flex layout |
+| `OnboardingScreen.js` | Pager + navigation |
+| `onboardingUi.js` | Theme-mapped tokens |
+| `OnboardingImagePlaceholder.js` | Illustration slot |
+| `OnboardingPagination.js` | Dot indicator |
+| `OnboardingFeatureIcons.js` | List icons |

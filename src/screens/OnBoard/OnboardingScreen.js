@@ -1,285 +1,183 @@
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import {
-  ImageBackground,
-  Pressable,
+  FlatList,
   StatusBar,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import Typography from '../../atomComponents/Typography';
-import Flex from '../../atomComponents/Flex';
-import OnboardingGradientOverlay from '../../components/solterra/OnboardingGradientOverlay';
-import { onb1, onb2, onb3, onb4, onb5 } from '../../assets/images';
-import { COLORS, FONTS, RADIUS, SHADOWS } from '../../globalStyle/Theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Button } from '../../components';
+import OnboardingPagination from '../../components/solterra/OnboardingPagination';
+import { COLORS, FONTS } from '../../globalStyle/Theme';
 import Sizer from '../../helpers/Sizer';
+import OnboardingSlide from './OnboardingSlide';
+import { FOOTER, ONBOARDING_UI } from './onboardingUi';
+import { ONBOARDING_SLIDES } from './onboardingSlides';
 
-const SLIDES = [
-  {
-    pill: 'Welcome',
-    title: 'Your Personal Garden Consultant.',
-    body: 'AI-powered advice, expert learning, and everything you need to grow a thriving garden.',
-    image: onb1,
-    chips: [],
-    final: false,
-  },
-  {
-    pill: 'AI Assistant',
-    title: 'Meet Sol, Your Garden AI.',
-    body: 'Chat with Sol anytime. Get care advice, diagnose issues, and receive personalized seasonal tips.',
-    image: onb2,
-    chips: ['🌱 Plant Care', '🐛 Diagnose', '☀️ Seasonal'],
-    final: false,
-  },
-  {
-    pill: 'Learn',
-    title: 'A Garden School in Your Pocket.',
-    body: 'Tutorials, guides, videos, and expert tips — organized by plant type, skill level, and season.',
-    image: onb3,
-    chips: ['📚 Tutorials', '🎬 Videos', '🌿 Guides'],
-    final: false,
-  },
-  {
-    pill: 'Shop',
-    title: 'Everything Your Garden Needs.',
-    body: 'Shop plants, seeds, tools, fertilizers, and irrigation — curated for your garden type.',
-    image: onb4,
-    chips: ['🌱 Plants', '🛠 Tools', '🪴 Pots', '💧 Irrigation'],
-    final: false,
-  },
-  {
-    pill: 'Get Started',
-    title: 'Grow Something Beautiful.',
-    body: 'Join thousands of gardeners growing smarter with SolTerra.',
-    image: onb5,
-    chips: [],
-    final: true,
-  },
-];
+const BATCH2_START = 6;
+const BATCH2_DOT_COUNT = 5;
 
-const OnboardingDots = ({ count, index, onSelect, style }) => (
-  <View style={[styles.dotsRow, style]}>
-    {Array.from({ length: count }).map((_, i) => (
-      <Pressable
-        key={i}
-        onPress={() => onSelect(i)}
-        style={[styles.dot, i === index && styles.dotActive]}
-      />
-    ))}
-  </View>
-);
+function getPaginationState(index) {
+  if (index < BATCH2_START) {
+    return { count: BATCH2_START, index };
+  }
+  return {
+    count: BATCH2_DOT_COUNT,
+    index: Math.min(index - BATCH2_START, BATCH2_DOT_COUNT - 1),
+  };
+}
+
+function getSlideIndexFromDot(dotIndex, currentIndex) {
+  if (currentIndex < BATCH2_START) {
+    return dotIndex;
+  }
+  return BATCH2_START + dotIndex;
+}
 
 const OnboardingScreen = ({ navigation }) => {
-  const insets = useSafeAreaInsets();
+  const listRef = useRef(null);
   const [index, setIndex] = useState(0);
-  const slide = SLIDES[index];
-  const last = slide.final;
-  const isFirst = index === 0;
+  const isLast = index === ONBOARDING_SLIDES.length - 1;
+  const currentSlide = ONBOARDING_SLIDES[index];
+  const useWelcomeFooter = currentSlide.footer === FOOTER.welcome;
+  const pagination = getPaginationState(index);
+  const nextLabel = currentSlide.nextLabel ?? 'Next';
 
-  const next = () => {
-    if (index < SLIDES.length - 1) setIndex(index + 1);
-    else navigation.replace('AuthWelcomeScreen');
-  };
+  const goNext = useCallback(() => {
+    if (isLast) {
+      navigation.replace('AuthWelcomeScreen');
+      return;
+    }
+    const next = index + 1;
+    listRef.current?.scrollToIndex({ index: next, animated: true });
+    setIndex(next);
+  }, [index, isLast, navigation]);
+
+  const onMomentumScrollEnd = useCallback(e => {
+    const nextIndex = Math.round(e.nativeEvent.contentOffset.x / ONBOARDING_UI.screenW);
+    setIndex(nextIndex);
+  }, []);
+
+  const goToSlide = useCallback(
+    dotIndex => {
+      const target = getSlideIndexFromDot(dotIndex, index);
+      listRef.current?.scrollToIndex({ index: target, animated: true });
+      setIndex(target);
+    },
+    [index],
+  );
 
   return (
-    <ImageBackground
-      source={slide.image}
-      style={styles.root}
-      imageStyle={styles.bgImage}
-      resizeMode="cover">
-      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
-      <OnboardingGradientOverlay />
+    <SafeAreaView style={styles.root} edges={['top', 'bottom']}>
+      <StatusBar barStyle="dark-content" backgroundColor={ONBOARDING_UI.cream} />
 
-      <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
-        <View style={[styles.topBar, { paddingTop: insets.top + Sizer.vSize(8) }]}>
-          <Typography variant="label" color="rgba(255,255,255,0.85)">
-            SOLTERRA
-          </Typography>
-          <TouchableOpacity
-            style={styles.skip}
-            onPress={() => navigation.replace('AuthWelcomeScreen')}
-            activeOpacity={0.8}>
-            <Typography size={13} color="rgba(255,255,255,0.9)" style={styles.skipText}>
-              Skip
-            </Typography>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.screenBody}>
+        <FlatList
+          ref={listRef}
+          style={styles.list}
+          contentContainerStyle={styles.listContent}
+          data={ONBOARDING_SLIDES}
+          keyExtractor={item => item.id}
+          horizontal
+          pagingEnabled
+          bounces={false}
+          showsHorizontalScrollIndicator={false}
+          onMomentumScrollEnd={onMomentumScrollEnd}
+          getItemLayout={(_, i) => ({
+            length: ONBOARDING_UI.screenW,
+            offset: ONBOARDING_UI.screenW * i,
+            index: i,
+          })}
+          renderItem={({ item }) => <OnboardingSlide slide={item} />}
+        />
 
-        <View style={styles.bottomPanel}>
-          <View style={styles.pill}>
-            <Typography variant="label" color={COLORS.primary}>
-              {slide.pill.toUpperCase()}
-            </Typography>
-          </View>
+        <View
+          style={[
+            styles.footer,
+            useWelcomeFooter ? styles.footerWelcome : styles.footerStandard,
+          ]}>
+          {!useWelcomeFooter ? (
+            <OnboardingPagination
+              count={pagination.count}
+              index={pagination.index}
+              onSelect={goToSlide}
+            />
+          ) : null}
 
-          <Typography size={30} color={COLORS.white} mT={16} style={styles.title}>
-            {slide.title}
-          </Typography>
-
-          <Typography size={14.5} color="rgba(255,255,255,0.9)" mT={12} style={styles.body}>
-            {slide.body}
-          </Typography>
-
-          {slide.chips.length > 0 && (
-            <Flex direction="row" flexWrap="wrap" gap={8} mT={14}>
-              {slide.chips.map(c => (
-                <View key={c} style={styles.chip}>
-                  <Typography variant="caption" color={COLORS.white}>
-                    {c}
-                  </Typography>
-                </View>
-              ))}
-            </Flex>
-          )}
-
-          {/* Slide 1 mock: dots left + Next right on one row; later slides: dots, then Back | Next */}
-          {isFirst ? (
-            <View style={styles.controlsRow}>
-              <OnboardingDots count={SLIDES.length} index={index} onSelect={setIndex} />
-              <TouchableOpacity style={styles.nextBtn} onPress={next} activeOpacity={0.85}>
-                <Typography variant="bodySm" color={COLORS.primary} style={styles.nextLabel}>
-                  Next →
-                </Typography>
-              </TouchableOpacity>
-            </View>
+          {useWelcomeFooter ? (
+            <TouchableOpacity
+              style={styles.welcomeNextBtn}
+              onPress={goNext}
+              activeOpacity={0.88}
+              accessibilityRole="button"
+              accessibilityLabel={nextLabel}>
+              <Text style={styles.nextBtnText}>{nextLabel}</Text>
+            </TouchableOpacity>
           ) : (
-            <View>
-              <OnboardingDots
-                count={SLIDES.length}
-                index={index}
-                onSelect={setIndex}
-                style={styles.dotsSpaced}
-              />
-              <View style={styles.navRow}>
-                <TouchableOpacity
-                  onPress={() => setIndex(index - 1)}
-                  activeOpacity={0.7}
-                  style={styles.backBtn}>
-                  <Typography variant="bodySm" color="rgba(255,255,255,0.8)" style={styles.backText}>
-                    ← Back
-                  </Typography>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.nextBtn} onPress={next} activeOpacity={0.85}>
-                  <Typography variant="bodySm" color={COLORS.primary} style={styles.nextLabel}>
-                    {last ? 'Get Started' : 'Next'} →
-                  </Typography>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-
-          {last && (
-            <Pressable
-              onPress={() => navigation.navigate('SignInScreen')}
-              style={styles.signInLink}>
-              <Typography variant="bodySm" color="rgba(255,255,255,0.9)" textAlign="center">
-                Already have an account? Sign In
-              </Typography>
-            </Pressable>
+            <Button
+              label={nextLabel}
+              onPress={goNext}
+              height={52}
+              btnStyle={styles.nextBtn}
+              textStyle={styles.nextBtnText}
+            />
           )}
         </View>
-      </SafeAreaView>
-    </ImageBackground>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  root: { flex: 1, overflow: 'hidden' },
-  bgImage: { width: '100%', height: '100%' },
-  safe: {
+  root: {
     flex: 1,
-    justifyContent: 'space-between',
-    backgroundColor: 'transparent',
-    zIndex: 2,
+    backgroundColor: ONBOARDING_UI.cream,
   },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  screenBody: {
+    flex: 1,
+  },
+  list: {
+    flex: 1,
+  },
+  listContent: {
+    flexGrow: 1,
+  },
+  footer: {
+    backgroundColor: ONBOARDING_UI.cream,
+  },
+  footerStandard: {
+    paddingHorizontal: ONBOARDING_UI.padX,
+    paddingTop: Sizer.vSize(10),
+    paddingBottom: Sizer.vSize(10),
+    gap: 16,
+  },
+  footerWelcome: {
+    paddingHorizontal: ONBOARDING_UI.padX,
+    paddingTop: 0,
+    paddingBottom: Sizer.vSize(10),
+    alignItems: 'flex-end',
+  },
+  welcomeNextBtn: {
+    height: Sizer.hSize(42),
+    minWidth: Sizer.hSize(104),
+    paddingHorizontal: Sizer.hSize(32),
+    borderRadius: 22,
+    backgroundColor: ONBOARDING_UI.primary,
     alignItems: 'center',
-    paddingHorizontal: Sizer.hSize(24),
-    zIndex: 2,
-  },
-  skip: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: RADIUS.pill,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.2)',
-  },
-  skipText: { fontWeight: '500' },
-  bottomPanel: {
-    paddingHorizontal: Sizer.hSize(24),
-    paddingBottom: Sizer.vSize(28),
-    paddingTop: Sizer.vSize(12),
-    zIndex: 2,
-  },
-  pill: {
-    alignSelf: 'flex-start',
-    backgroundColor: COLORS.accent,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: RADIUS.pill,
-  },
-  title: {
-    fontFamily: FONTS.display,
-    fontWeight: '700',
-    lineHeight: Sizer.fS(33),
-  },
-  body: { lineHeight: Sizer.fS(22), maxWidth: '95%' },
-  chip: {
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.2)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: RADIUS.pill,
-  },
-  controlsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: Sizer.vSize(22),
-  },
-  dotsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  dotsSpaced: { marginTop: Sizer.vSize(22) },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: 'rgba(255,255,255,0.4)',
-  },
-  dotActive: {
-    width: 28,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: COLORS.accent,
-  },
-  navRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: Sizer.vSize(18),
-  },
-  backBtn: { paddingHorizontal: 12, paddingVertical: 8 },
-  backText: { fontWeight: '500' },
-  nextBtn: {
-    minHeight: Sizer.vSize(48),
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: RADIUS.pill,
-    backgroundColor: COLORS.accent,
     justifyContent: 'center',
-    alignItems: 'center',
-    ...SHADOWS.soft,
   },
-  nextLabel: { fontWeight: '600', fontSize: Sizer.fS(14) },
-  signInLink: { marginTop: 16, alignSelf: 'center' },
+  nextBtn: {
+    borderRadius: ONBOARDING_UI.radiusMd,
+    backgroundColor: ONBOARDING_UI.primary,
+  },
+  nextBtnText: {
+    color: ONBOARDING_UI.white,
+    fontFamily: FONTS.bodySemiBold,
+    fontSize: Sizer.fS(16),
+    fontWeight: '600',
+  },
 });
 
 export default OnboardingScreen;

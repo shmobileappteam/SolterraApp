@@ -11,7 +11,7 @@ const SignUpScreen = ({ navigation }) => {
   const [agreed, setAgreed] = useState(true);
 
   return (
-    <AuthShell variant="trellis" showRegistered onBack={() => navigation.goBack()}>
+    <AuthShell variant="trellis" onBack={() => navigation.goBack()}>
       <Typography style={trellisAuthStyles.displayTitle}>Create Account</Typography>
       <Typography style={[trellisAuthStyles.bodyMuted, { marginTop: 4 }]}>
         Start growing with Trellis today.
@@ -58,7 +58,7 @@ const SignUpScreen = ({ navigation }) => {
           height={44}
           btnStyle={trellisAuthStyles.btnPrimary}
           textStyle={trellisAuthStyles.btnPrimaryText}
-          onPress={() => navigation.navigate('ProfileSetupScreen')}
+          onPress={() => navigation.navigate('ChoosePlanScreen')}
         />
 
         <Typography size={13} color={T.forest} textAlign="center" mT={4}>

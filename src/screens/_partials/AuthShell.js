@@ -18,7 +18,6 @@ export default function AuthShell({
   children,
   variant = 'trellis',
   onBack,
-  showRegistered = false,
   heroBg = false,
 }) {
   const insets = useSafeAreaInsets();
@@ -47,7 +46,7 @@ export default function AuthShell({
 
       <View style={[styles.authTop, heroBg && styles.authTopHero, { paddingTop: insets.top + Sizer.vSize(12) }]}>
         {isTrellis && !heroBg ? <View style={styles.glow} pointerEvents="none" /> : null}
-        <TrellisSplashLogo showCard={false} showRegistered={showRegistered} />
+        <TrellisSplashLogo variant={heroBg ? 'white' : 'green'} size="auth" />
         <Typography
           size={14}
           color={heroBg ? 'rgba(255,255,255,0.9)' : T.muted}

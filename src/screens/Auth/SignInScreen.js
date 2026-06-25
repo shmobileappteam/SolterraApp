@@ -10,7 +10,7 @@ const SignInScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <AuthShell variant="trellis" showRegistered onBack={() => navigation.goBack()}>
+    <AuthShell variant="trellis" onBack={() => navigation.goBack()}>
       <Typography style={trellisAuthStyles.displayTitle}>Welcome Back</Typography>
       <Typography style={[trellisAuthStyles.bodyMuted, { marginTop: 4 }]}>
         Sign in to your Trellis account

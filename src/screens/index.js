@@ -3,6 +3,19 @@ import OnboardingScreen from './OnBoard/OnboardingScreen';
 import AuthWelcomeScreen from './Auth/AuthWelcomeScreen';
 import SignInScreen from './Auth/SignInScreen';
 import SignUpScreen from './Auth/SignUpScreen';
+import ChoosePlanScreen from './Auth/ChoosePlanScreen';
+import InviteHouseholdScreen from './Auth/InviteHouseholdScreen';
+import ConnectExperienceScreen from './Auth/ConnectExperienceScreen';
+import PlanIntroScreen from './Plan/PlanIntroScreen';
+import PlanAboutYouScreen from './Plan/PlanAboutYouScreen';
+import PlanAnalyzingScreen from './Plan/PlanAnalyzingScreen';
+import PlanFindingsReviewScreen from './Plan/PlanFindingsReviewScreen';
+import PlanRecommendedStyleScreen from './Plan/PlanRecommendedStyleScreen';
+import PlanPlantsChosenScreen from './Plan/PlanPlantsChosenScreen';
+import PlanReviewSummaryScreen from './Plan/PlanReviewSummaryScreen';
+import PlanBuildingScreen from './Plan/PlanBuildingScreen';
+import PlanBlueprintRevealScreen from './Plan/PlanBlueprintRevealScreen';
+import PlanDashboardHandoffScreen from './Plan/PlanDashboardHandoffScreen';
 import PreferencesScreen from './Auth/PreferencesScreen';
 import ProfileSetupScreen from './Auth/ProfileSetupScreen';
 import GardenScanScreen from './Auth/GardenScanScreen';
@@ -37,6 +50,19 @@ export {
   AuthWelcomeScreen,
   SignInScreen,
   SignUpScreen,
+  ChoosePlanScreen,
+  InviteHouseholdScreen,
+  ConnectExperienceScreen,
+  PlanIntroScreen,
+  PlanAboutYouScreen,
+  PlanAnalyzingScreen,
+  PlanFindingsReviewScreen,
+  PlanRecommendedStyleScreen,
+  PlanPlantsChosenScreen,
+  PlanReviewSummaryScreen,
+  PlanBuildingScreen,
+  PlanBlueprintRevealScreen,
+  PlanDashboardHandoffScreen,
   PreferencesScreen,
   ProfileSetupScreen,
   GardenScanScreen,
