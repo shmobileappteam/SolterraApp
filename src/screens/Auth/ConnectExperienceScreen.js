@@ -8,6 +8,7 @@ import { G } from '../_partials/gardenUi';
 import Sizer from '../../helpers/Sizer';
 import { ONBOARDING_IMAGE, ONBOARDING_UI } from '../OnBoard/onboardingUi';
 import SetupFlowLayout from './_partials/SetupFlowLayout';
+import { accountConnect } from '../../assets/images';
 
 const CONNECT_IMAGE_BOX = {
   ...ONBOARDING_IMAGE.middle,
@@ -27,7 +28,7 @@ function ToggleRow({ icon, label, value, onValueChange }) {
     <View style={styles.toggleRow}>
       <View style={styles.toggleLeft}>
         <View style={styles.iconSlot}>
-          <OnboardingFeatureIcon name={icon} />
+          <OnboardingFeatureIcon name={icon} color={ONBOARDING_UI.green} />
         </View>
         <Typography size={14} color={ONBOARDING_UI.green} style={styles.toggleLabel}>
           {label}
@@ -57,10 +58,12 @@ const ConnectExperienceScreen = ({ navigation }) => {
   return (
     <SetupFlowLayout
       imageFirst
-      title="Connect for a better experience."
-      subtitle="Sync devices, get smarter recommendations, and never lose your garden."
-      subtitleColor={ONBOARDING_UI.green}
-      imageKey="setup-connect-experience"
+      centered
+      title="Connect for a better\nexperience."
+      subtitle="Sync devices, get smarter\nrecommendations, and never\nlose your garden."
+      subtitleColor={ONBOARDING_UI.text}
+      imageSource={accountConnect}
+      imageScale={1.1}
       imageBox={CONNECT_IMAGE_BOX}
       imageResizeMode="contain"
       footer={
@@ -97,7 +100,7 @@ const ConnectExperienceScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   toggleList: {
     gap: Sizer.vSize(16),
-    paddingTop: Sizer.vSize(4),
+    paddingTop: Sizer.vSize(16),
   },
   toggleRow: {
     flexDirection: 'row',
@@ -136,6 +139,7 @@ const styles = StyleSheet.create({
   footerLink: {
     fontFamily: FONTS.bodySemiBold,
     fontWeight: '600',
+    marginTop: Sizer.vSize(16),
   },
 });
 

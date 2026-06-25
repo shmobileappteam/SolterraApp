@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
+import { accountBuildingPlan } from '../../assets/images';
 import OnboardingPagination from '../../components/solterra/OnboardingPagination';
 import PlanFlowLayout from './_partials/PlanFlowLayout';
 import {
@@ -10,6 +11,12 @@ import {
   PlanStatusRow,
   planUiStyles,
 } from './_partials/planUi';
+
+const BUILDING_IMAGE_BOX = {
+  ...PLAN_BOTTOM_IMAGE,
+  minHeight: 140,
+  maxHeight: 170,
+};
 
 const BUILD_STEPS = [
   { icon: 'leaf', label: 'Matching plants to your space' },
@@ -41,7 +48,11 @@ const PlanBuildingScreen = ({ navigation }) => {
           <OnboardingPagination count={PLAN_FINAL_STEPS} index={3} />
         </>
       }>
-      <PlanBottomImage imageKey="plan-building-clipboard" imageBox={PLAN_BOTTOM_IMAGE} />
+      <PlanBottomImage
+        imageSource={accountBuildingPlan}
+        imageScale={1.05}
+        imageBox={BUILDING_IMAGE_BOX}
+      />
       <View style={[planUiStyles.listCard, { marginTop: 16 }]}>
         {BUILD_STEPS.map((item, index) => (
           <View key={item.label}>

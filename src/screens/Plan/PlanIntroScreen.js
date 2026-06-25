@@ -6,6 +6,7 @@ import { FONTS } from '../../globalStyle/Theme';
 import Sizer from '../../helpers/Sizer';
 import { ONBOARDING_IMAGE, ONBOARDING_UI } from '../OnBoard/onboardingUi';
 import PlanFlowLayout from './_partials/PlanFlowLayout';
+import { accountPlanIntro } from '../../assets/images';
 
 const INTRO_FEATURES = [
   { icon: 'award', label: 'Tailored to your space and goals' },
@@ -16,8 +17,8 @@ const INTRO_FEATURES = [
 
 const BOTTOM_IMAGE_BOX = {
   ...ONBOARDING_IMAGE.bottom,
-  minHeight: 130,
-  maxHeight: 160,
+  minHeight: 140,
+  maxHeight: 170,
 };
 
 function FeatureRow({ icon, label }) {
@@ -40,7 +41,8 @@ const PlanIntroScreen = ({ navigation }) => {
       title="Let's create your personalized garden plan."
       subtitle="Answer a few quick questions so we can build a plan that's just right for you."
       subtitleColor={ONBOARDING_UI.green}
-      bottomImageKey="plan-intro-botanical"
+      bottomImageSource={accountPlanIntro}
+      bottomImageScale={1.05}
       bottomImageBox={BOTTOM_IMAGE_BOX}
       footerLabel="Let's Begin"
       onNext={() => navigation.navigate('PlanAboutYouScreen')}>

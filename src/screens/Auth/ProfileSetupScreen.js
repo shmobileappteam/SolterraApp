@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   continueBtn: {
     marginTop: 24,
     height: Sizer.hSize(44),
-    borderRadius: 999,
+    borderRadius: 12,
     backgroundColor: T.accent,
     alignItems: 'center',
     justifyContent: 'center',

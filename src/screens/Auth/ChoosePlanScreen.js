@@ -7,11 +7,12 @@ import { G } from '../_partials/gardenUi';
 import Sizer from '../../helpers/Sizer';
 import { ONBOARDING_IMAGE, ONBOARDING_UI } from '../OnBoard/onboardingUi';
 import SetupFlowLayout from './_partials/SetupFlowLayout';
+import { accountPlan } from '../../assets/images';
 
 const PLAN_IMAGE_BOX = {
   ...ONBOARDING_IMAGE.middle,
-  minHeight: 170,
-  maxHeight: 190,
+  minHeight: 180,
+  maxHeight: 220,
 };
 
 const PLANS = [
@@ -46,10 +47,12 @@ function PlanRadio({ selected }) {
 function PlanOption({ plan, selected, onSelect }) {
   return (
     <TouchableOpacity
-      style={[styles.planCard, selected && styles.planCardSelected]}
+      style={styles.planCard}
       activeOpacity={0.88}
       onPress={onSelect}>
-      <PlanRadio selected={selected} />
+      <View style={styles.radioWrap}>
+        <PlanRadio selected={selected} />
+      </View>
       <View style={styles.planCopy}>
         <View style={styles.planTitleRow}>
           <Typography size={15} color={ONBOARDING_UI.green} style={styles.planName}>
@@ -59,7 +62,7 @@ function PlanOption({ plan, selected, onSelect }) {
             {plan.price}
           </Typography>
         </View>
-        <Typography size={12} color={ONBOARDING_UI.green} style={styles.planDescription}>
+        <Typography size={13} color={ONBOARDING_UI.green} style={styles.planDescription}>
           {plan.description}
         </Typography>
       </View>
@@ -76,7 +79,8 @@ const ChoosePlanScreen = ({ navigation }) => {
       title="Choose the plan that grows with you."
       subtitle="All plans include core features to help your garden thrive."
       subtitleColor={ONBOARDING_UI.green}
-      imageKey="setup-choose-plan"
+      imageSource={accountPlan}
+      imageScale={1.08}
       imageBox={PLAN_IMAGE_BOX}
       imageResizeMode="contain"
       footer={
@@ -88,7 +92,7 @@ const ChoosePlanScreen = ({ navigation }) => {
             btnStyle={styles.primaryBtn}
             textStyle={styles.primaryBtnText}
           />
-          <Typography size={11} color={ONBOARDING_UI.green} textAlign="center" style={styles.footerNote}>
+          <Typography size={12} color={ONBOARDING_UI.green} textAlign="center" style={styles.footerNote}>
             You can change your plan anytime.
           </Typography>
         </>
@@ -109,49 +113,48 @@ const ChoosePlanScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   planList: {
-    gap: Sizer.vSize(10),
+    gap: Sizer.vSize(12),
+    marginTop: Sizer.vSize(4),
     paddingBottom: Sizer.vSize(4),
   },
   planCard: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: Sizer.hSize(14),
+    alignItems: 'flex-start',
+    gap: Sizer.hSize(12),
     paddingHorizontal: Sizer.hSize(16),
-    paddingVertical: Sizer.vSize(15),
+    paddingVertical: Sizer.vSize(16),
     borderRadius: ONBOARDING_UI.radiusMd,
     borderWidth: 1,
     borderColor: ONBOARDING_UI.cardBorder,
-    backgroundColor: ONBOARDING_UI.cream,
+    backgroundColor: G.cardTint,
   },
-  planCardSelected: {
-    borderColor: ONBOARDING_UI.primary,
-    borderWidth: 1.5,
-    backgroundColor: ONBOARDING_UI.cream,
+  radioWrap: {
+    paddingTop: Sizer.vSize(1),
+    flexShrink: 0,
   },
   radioOuter: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
     borderWidth: 2,
-    borderColor: G.divider,
+    borderColor: ONBOARDING_UI.green,
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
   },
   radioOuterOn: {
-    borderColor: ONBOARDING_UI.primary,
-    backgroundColor: ONBOARDING_UI.primary,
+    borderColor: ONBOARDING_UI.green,
   },
   radioInner: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: G.accent,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: ONBOARDING_UI.green,
   },
   planCopy: {
     flex: 1,
     minWidth: 0,
-    gap: Sizer.vSize(4),
+    gap: Sizer.vSize(6),
   },
   planTitleRow: {
     flexDirection: 'row',
@@ -171,8 +174,7 @@ const styles = StyleSheet.create({
   planDescription: {
     fontFamily: FONTS.body,
     fontWeight: '400',
-    lineHeight: Sizer.fS(18),
-    opacity: 0.82,
+    lineHeight: Sizer.fS(19),
   },
   primaryBtn: {
     borderRadius: ONBOARDING_UI.radiusMd,
@@ -184,8 +186,9 @@ const styles = StyleSheet.create({
     fontSize: Sizer.fS(16),
   },
   footerNote: {
-    lineHeight: Sizer.fS(16),
-    opacity: 0.85,
+    fontFamily: FONTS.body,
+    lineHeight: Sizer.fS(18),
+    marginTop: Sizer.vSize(14),
   },
 });
 

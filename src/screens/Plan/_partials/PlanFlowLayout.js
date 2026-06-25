@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StatusBar, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '../../../components';
 import OnboardingImagePlaceholder from '../../../components/solterra/OnboardingImagePlaceholder';
@@ -11,6 +11,17 @@ import Sizer from '../../../helpers/Sizer';
 import { getOnboardingPlaceholderSource } from '../../OnBoard/onboardingPlaceholderImages';
 import { ONBOARDING_IMAGE, ONBOARDING_UI } from '../../OnBoard/onboardingUi';
 
+function getScaledImageSize(source, contentWidth, scale = 1) {
+  const resolved = Image.resolveAssetSource(source);
+  if (!resolved?.width || !resolved?.height) {
+    return null;
+  }
+
+  const width = contentWidth * scale;
+  const height = width / (resolved.width / resolved.height);
+  return { width, height };
+}
+
 export const PLAN_FLOW_STEPS = 5;
 
 export default function PlanFlowLayout({
@@ -21,6 +32,8 @@ export default function PlanFlowLayout({
   subtitleColor = ONBOARDING_UI.text,
   headerIcon,
   bottomImageKey,
+  bottomImageSource,
+  bottomImageScale,
   bottomImageBox = ONBOARDING_IMAGE.bottom,
   footerLabel = 'Next',
   onNext,
@@ -30,10 +43,67 @@ export default function PlanFlowLayout({
   scrollable = true,
   children,
 }) {
-  const bottomSource = bottomImageKey
-    ? getOnboardingPlaceholderSource(bottomImageKey, bottomImageBox)
-    : null;
+  const bottomSource = bottomImageSource
+    ? bottomImageSource
+    : bottomImageKey
+      ? getOnboardingPlaceholderSource(bottomImageKey, bottomImageBox)
+      : null;
   const bottomHeight = bottomImageBox.maxHeight ?? 160;
+
+  const bottomImageArea = (() => {
+    if (!bottomSource && !bottomImageKey) {
+      return null;
+    }
+
+    const borderRadius = bottomImageBox.borderRadius ?? ONBOARDING_UI.radiusMd;
+    const contentWidth = ONBOARDING_UI.screenW - ONBOARDING_UI.padX * 2;
+    const scaledSize =
+      bottomImageScale && bottomSource
+        ? getScaledImageSize(bottomSource, contentWidth, bottomImageScale)
+        : null;
+
+    if (scaledSize) {
+      return (
+        <View style={[styles.bottomImageArea, { height: scaledSize.height }]}>
+          <View
+            style={[
+              styles.scaledImageClip,
+              {
+                width: contentWidth,
+                height: scaledSize.height,
+                borderRadius,
+              },
+            ]}>
+            <Image
+              source={bottomSource}
+              style={{
+                width: scaledSize.width,
+                height: scaledSize.height,
+              }}
+              resizeMode="contain"
+              accessibilityIgnoresInvertColors
+            />
+          </View>
+        </View>
+      );
+    }
+
+    return (
+      <View style={[styles.bottomImageArea, { height: bottomHeight }]}>
+        <OnboardingImagePlaceholder
+          source={bottomSource}
+          imageKey={bottomImageKey}
+          minHeight={bottomImageBox.minHeight}
+          maxHeight={bottomHeight}
+          maxWidth={bottomImageBox.maxWidth}
+          borderRadius={borderRadius}
+          resizeMode="contain"
+          flexFill={false}
+          style={styles.bottomImageFill}
+        />
+      </View>
+    );
+  })();
 
   const mainContent = (
     <>
@@ -64,21 +134,7 @@ export default function PlanFlowLayout({
 
       <View style={styles.content}>{children}</View>
 
-      {bottomImageKey ? (
-        <View style={[styles.bottomImageArea, { height: bottomHeight }]}>
-          <OnboardingImagePlaceholder
-            source={bottomSource}
-            imageKey={bottomImageKey}
-            minHeight={bottomImageBox.minHeight}
-            maxHeight={bottomHeight}
-            maxWidth={bottomImageBox.maxWidth}
-            borderRadius={bottomImageBox.borderRadius ?? ONBOARDING_UI.radiusMd}
-            resizeMode="contain"
-            flexFill={false}
-            style={styles.bottomImageFill}
-          />
-        </View>
-      ) : null}
+      {bottomImageArea}
     </>
   );
 
@@ -179,6 +235,11 @@ const styles = StyleSheet.create({
     marginTop: Sizer.vSize(20),
     marginBottom: Sizer.vSize(4),
     alignSelf: 'center',
+  },
+  scaledImageClip: {
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   bottomImageFill: {
     flex: 1,

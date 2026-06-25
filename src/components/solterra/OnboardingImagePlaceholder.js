@@ -10,6 +10,9 @@ export default function OnboardingImagePlaceholder({
   imageKey,
   minHeight = 200,
   maxHeight = 280,
+  height,
+  imageWidth,
+  imageHeight,
   maxWidth,
   borderRadius = ONBOARDING_UI.radiusMd,
   compact = false,
@@ -21,13 +24,21 @@ export default function OnboardingImagePlaceholder({
   const sizeStyle = maxWidth
     ? { maxWidth, width: maxWidth, aspectRatio: isCircle ? 1 : undefined }
     : null;
+  const resolvedHeight = height ?? maxHeight;
+  const sizedImage = imageWidth != null && imageHeight != null;
+  const fixedHeight = sizedImage
+    ? { width: imageWidth, height: imageHeight }
+    : !flexFill
+      ? { height: resolvedHeight, minHeight: resolvedHeight }
+      : { minHeight, maxHeight };
+  const clipStyle = { ...fixedHeight, ...(sizedImage ? null : { borderRadius }) };
 
   return (
     <View
       style={[
         flexFill ? styles.wrap : styles.fixedWrap,
         compact ? styles.compactWrap : null,
-        { minHeight: compact ? minHeight : minHeight, maxHeight, borderRadius },
+        clipStyle,
         sizeStyle,
         style,
       ]}
@@ -35,7 +46,7 @@ export default function OnboardingImagePlaceholder({
       {source ? (
         <Image
           source={source}
-          style={[styles.image, { borderRadius }]}
+          style={styles.image}
           resizeMode={resizeMode}
           accessibilityIgnoresInvertColors
         />

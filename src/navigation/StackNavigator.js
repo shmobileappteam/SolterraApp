@@ -11,6 +11,12 @@ import {
   ConnectExperienceScreen,
   PlanIntroScreen,
   PlanAboutYouScreen,
+  PlanLocationScreen,
+  PlanSpaceTypeScreen,
+  PlanTimeCommitmentScreen,
+  PlanBudgetScreen,
+  PlanPlantInterestsScreen,
+  PlanGardenPhotoScreen,
   PlanAnalyzingScreen,
   PlanFindingsReviewScreen,
   PlanRecommendedStyleScreen,
@@ -104,6 +110,36 @@ const StackNavigator = () => {
       <Stack.Screen
         name="PlanAboutYouScreen"
         component={PlanAboutYouScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanLocationScreen"
+        component={PlanLocationScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanSpaceTypeScreen"
+        component={PlanSpaceTypeScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanTimeCommitmentScreen"
+        component={PlanTimeCommitmentScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanBudgetScreen"
+        component={PlanBudgetScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanPlantInterestsScreen"
+        component={PlanPlantInterestsScreen}
+        options={{ contentStyle: { backgroundColor: G.cream } }}
+      />
+      <Stack.Screen
+        name="PlanGardenPhotoScreen"
+        component={PlanGardenPhotoScreen}
         options={{ contentStyle: { backgroundColor: G.cream } }}
       />
       <Stack.Screen

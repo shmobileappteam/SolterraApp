@@ -61,7 +61,13 @@ function Button({
       ) : (
         <Flex gap={8} algItems="center" jusContent="center" extraStyle={{ width: '100%' }}>
           {icon}
-          <Text style={[styles.text, { color }, textStyle]}>{label}</Text>
+          <Text
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.82}
+            style={[styles.text, { color }, textStyle]}>
+            {label}
+          </Text>
         </Flex>
       )}
     </TouchableOpacity>
@@ -81,6 +87,8 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.bodySemiBold,
     fontSize: Sizer.fS(14),
     fontWeight: '600',
+    flexShrink: 1,
+    textAlign: 'center',
   },
   primaryShadow: {
     elevation: 4,

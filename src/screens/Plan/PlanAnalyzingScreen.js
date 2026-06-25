@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
+import { accountAnalyzeSpace } from '../../assets/images';
 import OnboardingPagination from '../../components/solterra/OnboardingPagination';
 import PlanFlowLayout from './_partials/PlanFlowLayout';
 import {
@@ -9,6 +10,12 @@ import {
   PlanStatusRow,
   planUiStyles,
 } from './_partials/planUi';
+
+const ANALYZE_IMAGE_BOX = {
+  ...PLAN_BOTTOM_IMAGE,
+  minHeight: 140,
+  maxHeight: 170,
+};
 
 const STATUS_ITEMS = [
   { icon: 'fence', label: 'Checking boundaries' },
@@ -45,7 +52,11 @@ const PlanAnalyzingScreen = ({ navigation }) => {
           </View>
         ))}
       </View>
-      <PlanBottomImage imageKey="plan-analyzing-garden" imageBox={PLAN_BOTTOM_IMAGE} />
+      <PlanBottomImage
+        imageSource={accountAnalyzeSpace}
+        imageScale={1.05}
+        imageBox={ANALYZE_IMAGE_BOX}
+      />
     </PlanFlowLayout>
   );
 };

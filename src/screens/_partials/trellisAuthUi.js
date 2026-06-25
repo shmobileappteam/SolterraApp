@@ -1,7 +1,9 @@
 import { StyleSheet } from 'react-native';
 import { G } from './gardenUi';
-import { FONTS } from '../../globalStyle/Theme';
+import { FONTS, RADIUS } from '../../globalStyle/Theme';
 import Sizer from '../../helpers/Sizer';
+
+const BTN_RADIUS = RADIUS.md;
 
 /** Auth / onboarding tokens — matches web `garden-tokens` + `form-ui` */
 export const T = {
@@ -29,7 +31,7 @@ export const trellisAuthStyles = StyleSheet.create({
     color: T.muted,
   },
   btnPrimary: {
-    borderRadius: 8,
+    borderRadius: BTN_RADIUS,
     backgroundColor: T.primary,
   },
   btnPrimaryText: {
@@ -38,7 +40,7 @@ export const trellisAuthStyles = StyleSheet.create({
     fontSize: Sizer.fS(14),
   },
   btnOutline: {
-    borderRadius: 8,
+    borderRadius: BTN_RADIUS,
     borderWidth: 1,
     borderColor: T.primary,
     backgroundColor: 'transparent',
@@ -49,10 +51,10 @@ export const trellisAuthStyles = StyleSheet.create({
     fontSize: Sizer.fS(14),
   },
   btnSecondary: {
-    borderRadius: 8,
+    borderRadius: BTN_RADIUS,
     borderWidth: 1,
     borderColor: T.border,
-    backgroundColor: T.surface,
+    backgroundColor: 'transparent',
   },
   btnSecondaryText: {
     color: T.forest,
@@ -100,7 +102,7 @@ export const trellisAuthStyles = StyleSheet.create({
   continueBtn: {
     marginTop: 24,
     height: Sizer.hSize(44),
-    borderRadius: 999,
+    borderRadius: BTN_RADIUS,
     backgroundColor: T.accent,
     alignItems: 'center',
     justifyContent: 'center',

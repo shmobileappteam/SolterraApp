@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { OnboardingFeatureIcon } from '../../../components/solterra/OnboardingFeatureIcons';
 import OnboardingImagePlaceholder from '../../../components/solterra/OnboardingImagePlaceholder';
@@ -12,12 +12,14 @@ import { ONBOARDING_IMAGE, ONBOARDING_UI } from '../../OnBoard/onboardingUi';
 
 export const PLAN_BOTTOM_IMAGE = {
   ...ONBOARDING_IMAGE.bottom,
-  minHeight: 120,
-  maxHeight: 150,
+  minHeight: 130,
+  maxHeight: 160,
 };
 
 export const PLAN_ANALYSIS_STEPS = 6;
 export const PLAN_FINAL_STEPS = 4;
+export const PLAN_QUESTION_STEPS = 6;
+export const PLAN_PHOTO_STEPS = 5;
 
 export function PlanHeaderIcon({ name }) {
   return (
@@ -29,8 +31,54 @@ export function PlanHeaderIcon({ name }) {
   );
 }
 
-export function PlanBottomImage({ imageKey, imageBox = PLAN_BOTTOM_IMAGE }) {
-  const source = getOnboardingThumbSource(imageKey, imageBox.maxHeight ?? 150);
+function getScaledImageSize(source, contentWidth, scale = 1) {
+  const resolved = Image.resolveAssetSource(source);
+  if (!resolved?.width || !resolved?.height) {
+    return null;
+  }
+
+  const width = contentWidth * scale;
+  const height = width / (resolved.width / resolved.height);
+  return { width, height };
+}
+
+export function PlanBottomImage({
+  imageKey,
+  imageSource,
+  imageScale,
+  imageBox = PLAN_BOTTOM_IMAGE,
+}) {
+  const source = imageSource ?? (imageKey ? getOnboardingThumbSource(imageKey, imageBox.maxHeight ?? 150) : null);
+  const borderRadius = imageBox.borderRadius ?? ONBOARDING_UI.radiusMd;
+  const contentWidth = ONBOARDING_UI.screenW - ONBOARDING_UI.padX * 2;
+  const scaledSize = imageScale && source ? getScaledImageSize(source, contentWidth, imageScale) : null;
+
+  if (scaledSize) {
+    return (
+      <View style={[styles.bottomImageArea, { height: scaledSize.height }]}>
+        <View
+          style={[
+            styles.scaledImageClip,
+            {
+              width: contentWidth,
+              height: scaledSize.height,
+              borderRadius,
+            },
+          ]}>
+          <Image
+            source={source}
+            style={{
+              width: scaledSize.width,
+              height: scaledSize.height,
+            }}
+            resizeMode="contain"
+            accessibilityIgnoresInvertColors
+          />
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={[styles.bottomImageArea, { height: imageBox.maxHeight ?? 150 }]}>
       <OnboardingImagePlaceholder
@@ -38,13 +86,74 @@ export function PlanBottomImage({ imageKey, imageBox = PLAN_BOTTOM_IMAGE }) {
         imageKey={imageKey}
         minHeight={imageBox.minHeight}
         maxHeight={imageBox.maxHeight}
-        borderRadius={imageBox.borderRadius ?? ONBOARDING_UI.radiusMd}
+        borderRadius={borderRadius}
         resizeMode="contain"
         flexFill={false}
         style={styles.bottomImageFill}
       />
     </View>
   );
+}
+
+export function PlanInlineImage({
+  imageSource,
+  imageScale = 1,
+  widthRatio = 1,
+  onPress,
+  centered = false,
+  style,
+}) {
+  if (!imageSource) {
+    return null;
+  }
+
+  const contentWidth = ONBOARDING_UI.screenW - ONBOARDING_UI.padX * 2;
+  const baseWidth = contentWidth * widthRatio;
+  const scaledSize = getScaledImageSize(imageSource, baseWidth, imageScale);
+
+  if (!scaledSize) {
+    return null;
+  }
+
+  const imageBox = (
+    <View
+      style={[
+        styles.inlineImageArea,
+        {
+          width: baseWidth,
+          height: scaledSize.height,
+          borderRadius: ONBOARDING_UI.radiusMd,
+        },
+        style,
+      ]}>
+      <Image
+        source={imageSource}
+        style={{
+          width: scaledSize.width,
+          height: scaledSize.height,
+        }}
+        resizeMode="contain"
+        accessibilityIgnoresInvertColors
+      />
+    </View>
+  );
+
+  if (onPress) {
+    return (
+      <Pressable
+        onPress={onPress}
+        style={[centered && styles.inlineImageCentered, { width: baseWidth }]}
+        accessibilityRole="button"
+        accessibilityLabel="Garden space illustration"
+        accessibilityHint="Shows photo capture tips">
+        {({ pressed }) => (
+          <View style={pressed ? styles.inlineImagePressed : undefined}>{imageBox}</View>
+        )}
+      </Pressable>
+    );
+  }
+
+  return imageBox;
 }
 
 export function PlanStatusRow({ icon, label, status = 'done' }) {
@@ -128,19 +237,34 @@ export function MatchRing({ percent, size = 46 }) {
   );
 }
 
-export function StyleCard({ imageKey, title, matchLabel, percent }) {
+export function StyleCard({ imageKey, imageSource, title, matchLabel, percent }) {
+  const thumbSize = Sizer.hSize(64);
+
   return (
     <View style={styles.styleCard}>
-      <OnboardingImagePlaceholder
-        source={getOnboardingThumbSource(imageKey, 56)}
-        imageKey={imageKey}
-        compact
-        minHeight={56}
-        maxHeight={56}
-        maxWidth={56}
-        borderRadius={ONBOARDING_UI.radiusMd}
-        style={styles.styleThumb}
-      />
+      <View style={[styles.styleThumbWrap, { width: thumbSize, height: thumbSize }]}>
+        {imageSource ? (
+          <Image
+            source={imageSource}
+            style={styles.styleThumbImage}
+            resizeMode="cover"
+            accessibilityIgnoresInvertColors
+          />
+        ) : (
+          <OnboardingImagePlaceholder
+            source={getOnboardingThumbSource(imageKey, thumbSize)}
+            imageKey={imageKey}
+            compact
+            minHeight={thumbSize}
+            maxHeight={thumbSize}
+            maxWidth={thumbSize}
+            borderRadius={ONBOARDING_UI.radiusMd}
+            resizeMode="cover"
+            flexFill={false}
+            style={styles.styleThumbImage}
+          />
+        )}
+      </View>
       <View style={styles.styleCopy}>
         <Typography size={14} color={ONBOARDING_UI.green} style={styles.styleTitle}>
           {title}
@@ -154,7 +278,12 @@ export function StyleCard({ imageKey, title, matchLabel, percent }) {
   );
 }
 
-export function PlantCategoryCard({ title, subtitle, imageKeys }) {
+export function PlantCategoryCard({ title, subtitle, imageKeys, imageSources }) {
+  const thumbs =
+    imageSources ??
+    imageKeys?.map(key => getOnboardingThumbSource(key, 56)) ??
+    [];
+
   return (
     <View style={styles.plantCard}>
       <View style={styles.plantCardHeader}>
@@ -171,18 +300,28 @@ export function PlantCategoryCard({ title, subtitle, imageKeys }) {
         </Typography>
       </View>
       <View style={styles.plantThumbs}>
-        {imageKeys.map(key => (
-          <OnboardingImagePlaceholder
-            key={key}
-            source={getOnboardingThumbSource(key, 52)}
-            imageKey={key}
-            compact
-            minHeight={52}
-            maxHeight={52}
-            maxWidth={52}
-            borderRadius={ONBOARDING_UI.radiusMd}
-            style={styles.plantThumb}
-          />
+        {thumbs.map((source, index) => (
+          <View key={imageKeys?.[index] ?? `plant-thumb-${index}`} style={styles.plantThumbWrap}>
+            {source ? (
+              <Image
+                source={source}
+                style={styles.plantThumbImage}
+                resizeMode="cover"
+                accessibilityIgnoresInvertColors
+              />
+            ) : (
+              <OnboardingImagePlaceholder
+                imageKey={imageKeys?.[index]}
+                compact
+                minHeight={56}
+                maxHeight={56}
+                borderRadius={ONBOARDING_UI.radiusMd}
+                resizeMode="cover"
+                flexFill={false}
+                style={styles.plantThumbImage}
+              />
+            )}
+          </View>
         ))}
       </View>
     </View>
@@ -240,6 +379,135 @@ export function PlanChecklistRow({ label }) {
   );
 }
 
+export function PlanSectionTitle({ children }) {
+  return (
+    <Typography size={15} color={ONBOARDING_UI.green} style={styles.sectionTitle}>
+      {children}
+    </Typography>
+  );
+}
+
+export function PlanRadio({ selected }) {
+  return (
+    <View style={[styles.radioOuter, selected && styles.radioOuterOn]}>
+      {selected ? <View style={styles.radioInner} /> : null}
+    </View>
+  );
+}
+
+export function PlanCheckbox({ checked }) {
+  return (
+    <View style={[styles.planCheck, checked && styles.planCheckOn]}>
+      {checked ? (
+        <Typography size={11} color={ONBOARDING_UI.white} style={styles.planCheckMark}>
+          ✓
+        </Typography>
+      ) : null}
+    </View>
+  );
+}
+
+export function PlanRadioRow({ icon, label, prefix, selected, onPress }) {
+  return (
+    <Pressable style={styles.choiceRow} onPress={onPress}>
+      {icon ? (
+        <View style={styles.rowIcon}>
+          <OnboardingFeatureIcon name={icon} />
+        </View>
+      ) : null}
+      {prefix ? (
+        <Typography
+          size={14}
+          color={ONBOARDING_UI.green}
+          numberOfLines={1}
+          style={styles.choicePrefix}>
+          {prefix}
+        </Typography>
+      ) : null}
+      <Typography size={14} color={ONBOARDING_UI.green} style={styles.choiceLabel}>
+        {label}
+      </Typography>
+      <PlanRadio selected={selected} />
+    </Pressable>
+  );
+}
+
+export function PlanCheckboxRow({ icon, label, checked, onToggle }) {
+  return (
+    <Pressable style={styles.choiceRow} onPress={onToggle}>
+      {icon ? (
+        <View style={styles.rowIcon}>
+          <OnboardingFeatureIcon name={icon} />
+        </View>
+      ) : null}
+      <Typography size={14} color={ONBOARDING_UI.green} style={styles.choiceLabel}>
+        {label}
+      </Typography>
+      <PlanCheckbox checked={checked} />
+    </Pressable>
+  );
+}
+
+export function PlanChoiceList({ children }) {
+  return <View style={planUiStyles.listCard}>{children}</View>;
+}
+
+export function PlanChoiceDivider() {
+  return <View style={planUiStyles.listDivider} />;
+}
+
+export function PlanInterestCard({ imageKey, imageSource, label, checked, onToggle }) {
+  const fallbackSource = imageKey ? getOnboardingThumbSource(imageKey, 96) : null;
+  const source = imageSource ?? fallbackSource;
+
+  return (
+    <Pressable
+      style={[styles.interestCard, checked && styles.interestCardSelected]}
+      onPress={onToggle}>
+      <View style={styles.interestImageWrap}>
+        {source ? (
+          <Image
+            source={source}
+            style={styles.interestImageFill}
+            resizeMode="contain"
+            accessibilityIgnoresInvertColors
+          />
+        ) : (
+          <OnboardingImagePlaceholder
+            imageKey={imageKey}
+            compact
+            minHeight={96}
+            maxHeight={96}
+            borderRadius={ONBOARDING_UI.radiusSm}
+            resizeMode="contain"
+            flexFill={false}
+            style={styles.interestImageFill}
+          />
+        )}
+      </View>
+      <Typography size={13} color={ONBOARDING_UI.green} textAlign="center" style={styles.interestLabel}>
+        {label}
+      </Typography>
+      <View style={styles.interestCheckSlot}>
+        <PlanCheckbox checked={checked} />
+      </View>
+    </Pressable>
+  );
+}
+
+export function PlanPhotoAction({ icon, label, onPress }) {
+  return (
+    <TouchableOpacity style={styles.photoAction} activeOpacity={0.85} onPress={onPress}>
+      <View style={styles.photoActionIcon}>
+        <OnboardingFeatureIcon name={icon} color={ONBOARDING_UI.green} size={38} />
+      </View>
+      <Typography size={13} color={ONBOARDING_UI.green} textAlign="center" style={styles.photoActionLabel}>
+        {label}
+      </Typography>
+    </TouchableOpacity>
+  );
+}
+
 export const planUiStyles = StyleSheet.create({
   primaryBtn: {
     borderRadius: ONBOARDING_UI.radiusMd,
@@ -259,6 +527,7 @@ export const planUiStyles = StyleSheet.create({
     backgroundColor: ONBOARDING_UI.cream,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: Sizer.hSize(10),
   },
   outlineBtnText: {
     fontFamily: FONTS.bodySemiBold,
@@ -274,7 +543,7 @@ export const planUiStyles = StyleSheet.create({
     borderRadius: ONBOARDING_UI.radiusMd,
     borderWidth: 1,
     borderColor: ONBOARDING_UI.cardBorder,
-    backgroundColor: ONBOARDING_UI.cream,
+    backgroundColor: ONBOARDING_UI.cardBg,
     overflow: 'hidden',
   },
   listDivider: {
@@ -293,7 +562,7 @@ export const planUiStyles = StyleSheet.create({
     borderRadius: ONBOARDING_UI.radiusMd,
     borderWidth: 1,
     borderColor: ONBOARDING_UI.primary,
-    backgroundColor: ONBOARDING_UI.cream,
+    backgroundColor: ONBOARDING_UI.cardBg,
   },
   tabActive: {
     backgroundColor: ONBOARDING_UI.primary,
@@ -310,7 +579,6 @@ export const planUiStyles = StyleSheet.create({
   },
   mapImage: {
     width: '100%',
-    height: Sizer.vSize(180),
     borderRadius: ONBOARDING_UI.radiusMd,
     overflow: 'hidden',
     marginTop: Sizer.vSize(14),
@@ -341,6 +609,23 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: Sizer.vSize(16),
     alignSelf: 'center',
+  },
+  scaledImageClip: {
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inlineImageArea: {
+    alignSelf: 'flex-start',
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inlineImageCentered: {
+    alignSelf: 'center',
+  },
+  inlineImagePressed: {
+    opacity: 0.9,
   },
   bottomImageFill: {
     flex: 1,
@@ -424,6 +709,16 @@ const styles = StyleSheet.create({
     borderColor: ONBOARDING_UI.cardBorder,
     backgroundColor: ONBOARDING_UI.cardBg,
   },
+  styleThumbWrap: {
+    borderRadius: ONBOARDING_UI.radiusMd,
+    overflow: 'hidden',
+    flexShrink: 0,
+    backgroundColor: ONBOARDING_UI.cardBg,
+  },
+  styleThumbImage: {
+    width: '100%',
+    height: '100%',
+  },
   styleThumb: {
     flexShrink: 0,
   },
@@ -478,6 +773,18 @@ const styles = StyleSheet.create({
   plantThumbs: {
     flexDirection: 'row',
     gap: Sizer.hSize(8),
+  },
+  plantThumbWrap: {
+    flex: 1,
+    aspectRatio: 1,
+    maxHeight: Sizer.hSize(56),
+    borderRadius: ONBOARDING_UI.radiusMd,
+    overflow: 'hidden',
+    backgroundColor: ONBOARDING_UI.cardBg,
+  },
+  plantThumbImage: {
+    width: '100%',
+    height: '100%',
   },
   plantThumb: {
     flex: 1,
@@ -554,5 +861,128 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.body,
     fontWeight: '500',
     lineHeight: Sizer.fS(22),
+  },
+  sectionTitle: {
+    fontFamily: FONTS.bodySemiBold,
+    fontWeight: '700',
+    marginBottom: Sizer.vSize(12),
+    lineHeight: Sizer.fS(21),
+  },
+  radioOuter: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    borderWidth: 2,
+    borderColor: G.divider,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+  radioOuterOn: {
+    borderColor: ONBOARDING_UI.primary,
+  },
+  radioInner: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: ONBOARDING_UI.primary,
+  },
+  planCheck: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    borderWidth: 1.5,
+    borderColor: G.divider,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+  planCheckOn: {
+    backgroundColor: ONBOARDING_UI.primary,
+    borderColor: ONBOARDING_UI.primary,
+  },
+  planCheckMark: {
+    fontWeight: '700',
+    lineHeight: Sizer.fS(13),
+  },
+  choiceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Sizer.hSize(12),
+    paddingHorizontal: Sizer.hSize(14),
+    paddingVertical: Sizer.vSize(14),
+  },
+  choicePrefix: {
+    fontFamily: FONTS.bodySemiBold,
+    fontWeight: '700',
+    width: Sizer.hSize(44),
+    flexShrink: 0,
+  },
+  choiceLabel: {
+    flex: 1,
+    fontFamily: FONTS.body,
+    fontWeight: '500',
+    lineHeight: Sizer.fS(20),
+  },
+  interestCard: {
+    width: '48%',
+    borderRadius: ONBOARDING_UI.radiusMd,
+    borderWidth: 1,
+    borderColor: ONBOARDING_UI.cardBorder,
+    backgroundColor: ONBOARDING_UI.cardBg,
+    paddingHorizontal: Sizer.hSize(8),
+    paddingTop: Sizer.vSize(8),
+    paddingBottom: Sizer.vSize(10),
+    alignItems: 'center',
+    position: 'relative',
+  },
+  interestCardSelected: {
+    borderColor: ONBOARDING_UI.primary,
+    borderWidth: 1.5,
+  },
+  interestImageWrap: {
+    width: '100%',
+    height: Sizer.vSize(100),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: Sizer.vSize(6),
+  },
+  interestImageFill: {
+    width: '100%',
+    height: '100%',
+  },
+  interestLabel: {
+    fontFamily: FONTS.body,
+    fontWeight: '500',
+    lineHeight: Sizer.fS(17),
+  },
+  interestCheckSlot: {
+    position: 'absolute',
+    right: Sizer.hSize(8),
+    bottom: Sizer.vSize(8),
+  },
+  photoAction: {
+    flex: 1,
+    aspectRatio: 1,
+    maxHeight: Sizer.vSize(160),
+    borderRadius: ONBOARDING_UI.radiusMd,
+    borderWidth: 1,
+    borderColor: ONBOARDING_UI.cardBorder,
+    backgroundColor: ONBOARDING_UI.cardBg,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: Sizer.hSize(12),
+    gap: Sizer.vSize(10),
+  },
+  photoActionIcon: {
+    width: 58,
+    height: 58,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  photoActionLabel: {
+    fontFamily: FONTS.body,
+    fontWeight: '500',
+    lineHeight: Sizer.fS(17),
   },
 });

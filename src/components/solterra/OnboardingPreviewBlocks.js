@@ -49,10 +49,10 @@ function TaskCheckbox({ checked }) {
   );
 }
 
-function ThumbPlaceholder({ size = 44, radius = RADIUS.sm, imageKey }) {
+function ThumbPlaceholder({ size = 44, radius = RADIUS.sm, imageKey, source }) {
   return (
     <OnboardingImagePlaceholder
-      source={getOnboardingThumbSource(imageKey, size)}
+      source={source ?? getOnboardingThumbSource(imageKey, size)}
       imageKey={imageKey}
       compact
       minHeight={size}
@@ -121,8 +121,20 @@ export function CommunityPreviewCard({ data }) {
         {data.post.text}
       </Typography>
       <View style={styles.postPhotos}>
-        <ThumbPlaceholder size={54} imageKey="community-photo-1" />
-        <ThumbPlaceholder size={54} imageKey="community-photo-2" />
+        {data.post.images?.map((img, i) => (
+          <OnboardingImagePlaceholder
+            key={i}
+            source={img}
+            imageKey={`community-photo-${i}`}
+            compact
+            minHeight={80}
+            maxHeight={80}
+            maxWidth={120}
+            borderRadius={RADIUS.sm}
+            style={styles.thumb}
+            resizeMode="cover"
+          />
+        ))}
       </View>
       <View style={styles.reactionRow}>
         <View style={styles.reactionItem}>
@@ -149,12 +161,12 @@ export function ProjectsPreviewCard({ data }) {
       <View style={styles.cardBody}>
         {data.items.map(item => (
           <View key={item.title} style={styles.projectRow}>
-            <ThumbPlaceholder size={44} imageKey={`project-${item.title}`} />
+            <ThumbPlaceholder size={52} imageKey={`project-${item.title}`} source={item.imageSource} />
             <View style={styles.projectCopy}>
               <Typography size={13} color={ONBOARDING_UI.green} style={styles.projectTitle}>
                 {item.title}
               </Typography>
-              <Typography size={11} color={ONBOARDING_UI.text}>
+              <Typography size={12} color={ONBOARDING_UI.text} style={styles.projectSubtitle}>
                 {item.subtitle}
               </Typography>
             </View>
@@ -172,22 +184,22 @@ export function DiagnosePreviewCard({ data }) {
 
   return (
     <PreviewCard>
-      <Typography size={14} color={ONBOARDING_UI.green} style={styles.diagnoseEyebrow}>
+      <Typography size={15} color={ONBOARDING_UI.green} style={styles.diagnoseEyebrow}>
         {data.eyebrow}
       </Typography>
-      <Typography size={11} color={ONBOARDING_UI.text} mT={6}>
+      <Typography size={12} color={ONBOARDING_UI.text} mT={16} style={styles.diagnoseIssueLabel}>
         {data.issueLabel}
       </Typography>
-      <Typography size={20} color={ONBOARDING_UI.green} mT={4} style={styles.diagnoseTitle}>
+      <Typography size={18} color={ONBOARDING_UI.green} mT={2} style={styles.diagnoseTitle}>
         {data.issue}
       </Typography>
-      <Typography size={12} color={ONBOARDING_UI.text} mT={6} style={styles.diagnoseBody}>
+      <Typography size={13} color={ONBOARDING_UI.text} mT={6} style={styles.diagnoseBody}>
         {data.description}
       </Typography>
       <Button
         label={data.actionLabel}
-        type="secondary"
-        height={40}
+        type="primary"
+        height={36}
         onPress={() => {}}
         btnStyle={styles.diagnoseBtn}
         textStyle={styles.diagnoseBtnText}
@@ -201,11 +213,11 @@ function StatRow({ icon, label, value }) {
     <View style={styles.statRow}>
       <View style={styles.statLeft}>
         <OnboardingFeatureIcon name={icon} />
-        <Typography size={12} color={ONBOARDING_UI.green} style={styles.statLabel}>
+        <Typography size={13} color={ONBOARDING_UI.green} style={styles.statLabel}>
           {label}
         </Typography>
       </View>
-      <Typography size={12} color={ONBOARDING_UI.green} style={styles.statValue}>
+      <Typography size={13} color={ONBOARDING_UI.green} style={styles.statValue}>
         {value}
       </Typography>
     </View>
@@ -218,15 +230,23 @@ export function ProgressPreviewCard({ data }) {
 
   return (
     <PreviewCard>
-      <CardHeader title={data.title} actionLabel={data.periodLabel} />
+      <View style={styles.cardHeader}>
+        <Typography size={14} color={ONBOARDING_UI.green} style={styles.cardHeaderTitle}>
+          {data.title}
+        </Typography>
+        <Typography size={13} color={ONBOARDING_UI.green} style={styles.cardHeaderTitle}>
+          {data.periodLabel}
+        </Typography>
+      </View>
       <View style={styles.cardBody}>
         {regularStats.map(item => (
           <StatRow key={item.label} icon={item.icon} label={item.label} value={item.value} />
         ))}
         {scoreItem ? (
           <View style={styles.scoreBlock}>
+            <View style={styles.divider} />
             <StatRow icon={scoreItem.icon} label={scoreItem.label} value={scoreItem.value} />
-            <Typography size={11} color={ONBOARDING_UI.text} style={styles.scoreSubtext}>
+            <Typography size={12} color={ONBOARDING_UI.text} style={styles.scoreSubtext}>
               {scoreItem.subtext}
             </Typography>
             <View style={styles.progressTrack}>
@@ -274,14 +294,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: Sizer.vSize(10),
+    marginBottom: Sizer.vSize(14),
   },
   cardHeaderTitle: {
     fontFamily: FONTS.bodySemiBold,
     fontWeight: '600',
   },
   cardBody: {
-    gap: Sizer.vSize(10),
+    gap: Sizer.vSize(16),
   },
   link: {
     fontFamily: FONTS.bodySemiBold,
@@ -371,37 +391,51 @@ const styles = StyleSheet.create({
   projectRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Sizer.hSize(10),
+    gap: Sizer.hSize(12),
   },
   projectCopy: {
     flex: 1,
-    gap: Sizer.vSize(2),
+    gap: Sizer.vSize(4),
   },
   projectTitle: {
     fontFamily: FONTS.bodySemiBold,
     fontWeight: '600',
+    lineHeight: Sizer.fS(18),
+  },
+  projectSubtitle: {
+    fontFamily: FONTS.body,
+    fontWeight: '500',
   },
   thumb: {
     flex: 0,
   },
   diagnoseEyebrow: {
-    fontFamily: FONTS.display,
+    fontFamily: FONTS.bodySemiBold,
     fontWeight: '700',
   },
+  diagnoseIssueLabel: {
+    fontFamily: FONTS.bodySemiBold,
+    fontWeight: '600',
+  },
   diagnoseTitle: {
-    fontFamily: FONTS.display,
+    fontFamily: FONTS.bodySemiBold,
     fontWeight: '700',
   },
   diagnoseBody: {
-    lineHeight: Sizer.fS(17),
-    marginBottom: Sizer.vSize(10),
+    lineHeight: Sizer.fS(18),
+    marginBottom: Sizer.vSize(16),
   },
   diagnoseBtn: {
     width: '100%',
-    marginTop: Sizer.vSize(2),
+    backgroundColor: G.cardTint,
+    borderWidth: 0,
+    borderRadius: ONBOARDING_UI.radiusMd,
   },
   diagnoseBtnText: {
     color: ONBOARDING_UI.green,
+    fontFamily: FONTS.bodySemiBold,
+    fontWeight: '600',
+    fontSize: Sizer.fS(13),
   },
   statRow: {
     flexDirection: 'row',
@@ -423,22 +457,28 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   scoreBlock: {
-    gap: Sizer.vSize(4),
+    gap: Sizer.vSize(8),
+  },
+  divider: {
+    height: 1,
+    backgroundColor: ONBOARDING_UI.cardBorder,
+    marginTop: Sizer.vSize(2),
+    marginBottom: Sizer.vSize(6),
   },
   scoreSubtext: {
     marginLeft: Sizer.hSize(30),
+    marginTop: Sizer.vSize(-6),
   },
   progressTrack: {
     height: 8,
     borderRadius: 4,
     backgroundColor: G.sageLight,
-    marginTop: Sizer.vSize(4),
-    marginLeft: Sizer.hSize(30),
+    marginTop: Sizer.vSize(2),
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: G.sage,
+    backgroundColor: ONBOARDING_UI.green,
     borderRadius: 4,
   },
 });

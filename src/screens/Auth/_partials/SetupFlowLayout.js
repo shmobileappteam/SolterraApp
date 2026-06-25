@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StatusBar, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import OnboardingImagePlaceholder from '../../../components/solterra/OnboardingImagePlaceholder';
 import Typography from '../../../atomComponents/Typography';
@@ -7,6 +7,17 @@ import { FONTS } from '../../../globalStyle/Theme';
 import Sizer from '../../../helpers/Sizer';
 import { getOnboardingPlaceholderSource } from '../../OnBoard/onboardingPlaceholderImages';
 import { ONBOARDING_IMAGE, ONBOARDING_UI } from '../../OnBoard/onboardingUi';
+
+function getScaledImageSize(source, contentWidth, scale = 1) {
+  const resolved = Image.resolveAssetSource(source);
+  if (!resolved?.width || !resolved?.height) {
+    return null;
+  }
+
+  const width = contentWidth * scale;
+  const height = width / (resolved.width / resolved.height);
+  return { width, height };
+}
 
 /**
  * Auth setup shell (screens 13–16) — scrollable body + optional pinned footer.
@@ -17,16 +28,18 @@ export default function SetupFlowLayout({
   subtitle,
   subtitleColor = ONBOARDING_UI.text,
   imageKey,
+  imageSource,
+  imageScale,
   imageBox = ONBOARDING_IMAGE.middle,
   imageFirst = false,
   centered = false,
-  imageResizeMode = 'cover',
+  imageResizeMode = 'contain',
   scrollable = true,
   pinFooter = true,
   children,
   footer,
 }) {
-  const source = getOnboardingPlaceholderSource(imageKey, imageBox);
+  const source = imageSource || getOnboardingPlaceholderSource(imageKey, imageBox);
   const textAlign = centered ? 'center' : 'left';
   const imageHeight = imageBox.maxHeight ?? 220;
 
@@ -54,21 +67,53 @@ export default function SetupFlowLayout({
     </View>
   );
 
-  const imageArea = (
-    <View style={[styles.imageArea, { height: imageHeight }]}>
-      <OnboardingImagePlaceholder
-        source={source}
-        imageKey={imageKey}
-        minHeight={imageBox.minHeight}
-        maxHeight={imageHeight}
-        maxWidth={imageBox.maxWidth}
-        borderRadius={imageBox.borderRadius ?? ONBOARDING_UI.radiusMd}
-        resizeMode={imageResizeMode}
-        flexFill={false}
-        style={styles.imageFill}
-      />
-    </View>
-  );
+  const imageArea = (() => {
+    const borderRadius = imageBox.borderRadius ?? ONBOARDING_UI.radiusMd;
+    const contentWidth = ONBOARDING_UI.screenW - ONBOARDING_UI.padX * 2;
+    const scaledSize = imageScale && source ? getScaledImageSize(source, contentWidth, imageScale) : null;
+
+    if (scaledSize) {
+      return (
+        <View style={[styles.imageArea, { height: scaledSize.height }]}>
+          <View
+            style={[
+              styles.scaledImageClip,
+              {
+                width: contentWidth,
+                height: scaledSize.height,
+                borderRadius,
+              },
+            ]}>
+            <Image
+              source={source}
+              style={{
+                width: scaledSize.width,
+                height: scaledSize.height,
+              }}
+              resizeMode={imageResizeMode}
+              accessibilityIgnoresInvertColors
+            />
+          </View>
+        </View>
+      );
+    }
+
+    return (
+      <View style={[styles.imageArea, { height: imageHeight }]}>
+        <OnboardingImagePlaceholder
+          source={source}
+          imageKey={imageKey}
+          minHeight={imageBox.minHeight}
+          maxHeight={imageHeight}
+          maxWidth={imageBox.maxWidth}
+          borderRadius={borderRadius}
+          resizeMode={imageResizeMode}
+          flexFill={false}
+          style={styles.imageFill}
+        />
+      </View>
+    );
+  })();
 
   const mainContent = (
     <>
@@ -145,13 +190,19 @@ const styles = StyleSheet.create({
     lineHeight: Sizer.fS(21),
   },
   subtitleCenter: {
-    maxWidth: '90%',
+    maxWidth: '92%',
+    paddingHorizontal: Sizer.hSize(8),
   },
   imageArea: {
     width: '100%',
-    marginTop: Sizer.vSize(12),
-    marginBottom: Sizer.vSize(12),
+    marginTop: Sizer.vSize(16),
+    marginBottom: Sizer.vSize(16),
     alignSelf: 'center',
+  },
+  scaledImageClip: {
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   imageFill: {
     flex: 1,

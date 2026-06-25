@@ -7,6 +7,7 @@ import { G } from '../_partials/gardenUi';
 import Sizer from '../../helpers/Sizer';
 import { ONBOARDING_UI } from '../OnBoard/onboardingUi';
 import PlanFlowLayout from './_partials/PlanFlowLayout';
+import { PLAN_QUESTION_STEPS } from './_partials/planUi';
 
 const EXPERIENCE_LEVELS = [
   {
@@ -110,10 +111,11 @@ const PlanAboutYouScreen = ({ navigation }) => {
 
   return (
     <PlanFlowLayout
-      stepIndex={2}
+      stepIndex={0}
+      stepCount={PLAN_QUESTION_STEPS}
       title="Tell us a bit about you."
       subtitle="This helps us personalize your experience and recommendations."
-      onNext={() => navigation.navigate('PlanAnalyzingScreen')}>
+      onNext={() => navigation.navigate('PlanLocationScreen')}>
       <View style={styles.section}>
         <Typography size={15} color={ONBOARDING_UI.green} style={styles.sectionTitle}>
           What's your experience level?

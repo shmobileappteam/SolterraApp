@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Button } from '../../components';
+import { accountFound } from '../../assets/images';
 import OnboardingPagination from '../../components/solterra/OnboardingPagination';
 import Typography from '../../atomComponents/Typography';
 import { ONBOARDING_UI } from '../OnBoard/onboardingUi';
@@ -12,6 +13,12 @@ import {
   PlanFindingRow,
   planUiStyles,
 } from './_partials/planUi';
+
+const FINDINGS_IMAGE_BOX = {
+  ...PLAN_BOTTOM_IMAGE,
+  minHeight: 140,
+  maxHeight: 170,
+};
 
 const FINDINGS = [
   { icon: 'leaf', label: 'Zone', value: '9b' },
@@ -66,7 +73,11 @@ const PlanFindingsReviewScreen = ({ navigation }) => {
           </View>
         ))}
       </View>
-      <PlanBottomImage imageKey="plan-findings-garden" imageBox={PLAN_BOTTOM_IMAGE} />
+      <PlanBottomImage
+        imageSource={accountFound}
+        imageScale={1.05}
+        imageBox={FINDINGS_IMAGE_BOX}
+      />
     </PlanFlowLayout>
   );
 };

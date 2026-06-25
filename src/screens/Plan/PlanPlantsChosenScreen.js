@@ -1,5 +1,19 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import {
+  plantsFlowers01,
+  plantsFlowers02,
+  plantsFlowers03,
+  plantsFlowers04,
+  plantsHerbs01,
+  plantsHerbs02,
+  plantsHerbs03,
+  plantsHerbs04,
+  plantsVegetables01,
+  plantsVegetables02,
+  plantsVegetables03,
+  plantsVegetables04,
+} from '../../assets/images';
 import Sizer from '../../helpers/Sizer';
 import PlanFlowLayout from './_partials/PlanFlowLayout';
 import { PLAN_ANALYSIS_STEPS, PlantCategoryCard } from './_partials/planUi';
@@ -8,17 +22,22 @@ const CATEGORIES = [
   {
     title: 'Vegetables (12)',
     subtitle: 'Great for your climate',
-    imageKeys: ['plant-tomato', 'plant-lettuce', 'plant-bok-choy', 'plant-pepper'],
+    imageSources: [
+      plantsVegetables01,
+      plantsVegetables02,
+      plantsVegetables03,
+      plantsVegetables04,
+    ],
   },
   {
     title: 'Herbs (6)',
     subtitle: 'Easy to grow',
-    imageKeys: ['plant-basil', 'plant-rosemary', 'plant-parsley', 'plant-chives'],
+    imageSources: [plantsHerbs01, plantsHerbs02, plantsHerbs03, plantsHerbs04],
   },
   {
     title: 'Flowers (10)',
     subtitle: 'Beautiful & pollinator-friendly',
-    imageKeys: ['plant-coneflower', 'plant-lavender', 'plant-susan', 'plant-dianthus'],
+    imageSources: [plantsFlowers01, plantsFlowers02, plantsFlowers03, plantsFlowers04],
   },
 ];
 
@@ -38,7 +57,7 @@ const PlanPlantsChosenScreen = ({ navigation }) => {
             key={category.title}
             title={category.title}
             subtitle={category.subtitle}
-            imageKeys={category.imageKeys}
+            imageSources={category.imageSources}
           />
         ))}
       </View>

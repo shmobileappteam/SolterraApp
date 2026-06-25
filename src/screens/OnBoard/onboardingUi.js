@@ -17,7 +17,9 @@ export const ONBOARDING_UI = {
   padX: Sizer.hSize(SPACING.screenPx),
   screenW: SCREEN_W,
   white: COLORS.white,
+  radiusSm: RADIUS.sm,
   radiusMd: RADIUS.md,
+  radiusLg: RADIUS.lg,
   radiusPill: RADIUS.pill,
 };
 

@@ -1,5 +1,11 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import {
+  accountCottageGarden,
+  accountEdibleGarden,
+  accountLowManagementGarden,
+  accountPollinatorGarden,
+} from '../../assets/images';
 import Sizer from '../../helpers/Sizer';
 import PlanFlowLayout from './_partials/PlanFlowLayout';
 import { PLAN_ANALYSIS_STEPS, StyleCard } from './_partials/planUi';
@@ -7,31 +13,31 @@ import { PLAN_ANALYSIS_STEPS, StyleCard } from './_partials/planUi';
 const STYLES = [
   {
     id: 'edible',
-    imageKey: 'style-edible-garden',
     title: 'Edible Garden',
     matchLabel: 'Best fit for you',
     percent: 92,
+    imageSource: accountEdibleGarden,
   },
   {
     id: 'cottage',
-    imageKey: 'style-cottage-garden',
     title: 'Cottage Garden',
     matchLabel: 'Great match',
     percent: 85,
+    imageSource: accountCottageGarden,
   },
   {
     id: 'pollinator',
-    imageKey: 'style-pollinator-garden',
     title: 'Pollinator Garden',
     matchLabel: 'Good match',
     percent: 78,
+    imageSource: accountPollinatorGarden,
   },
   {
     id: 'lowMaintenance',
-    imageKey: 'style-low-maintenance',
     title: 'Low-Maintenance Garden',
     matchLabel: 'Good match',
     percent: 70,
+    imageSource: accountLowManagementGarden,
   },
 ];
 
@@ -49,7 +55,7 @@ const PlanRecommendedStyleScreen = ({ navigation }) => {
         {STYLES.map(style => (
           <StyleCard
             key={style.id}
-            imageKey={style.imageKey}
+            imageSource={style.imageSource}
             title={style.title}
             matchLabel={style.matchLabel}
             percent={style.percent}

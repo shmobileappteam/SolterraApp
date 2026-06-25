@@ -3,8 +3,6 @@ import {
   FlatList,
   StatusBar,
   StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -90,41 +88,33 @@ const OnboardingScreen = ({ navigation }) => {
             offset: ONBOARDING_UI.screenW * i,
             index: i,
           })}
-          renderItem={({ item }) => <OnboardingSlide slide={item} />}
+          renderItem={({ item }) => (
+            <View style={styles.slidePage}>
+              <OnboardingSlide
+                slide={item}
+                onWelcomeNext={item.footer === FOOTER.welcome ? goNext : undefined}
+                welcomeNextLabel={nextLabel}
+              />
+            </View>
+          )}
         />
 
-        <View
-          style={[
-            styles.footer,
-            useWelcomeFooter ? styles.footerWelcome : styles.footerStandard,
-          ]}>
-          {!useWelcomeFooter ? (
-            <OnboardingPagination
-              count={pagination.count}
-              index={pagination.index}
-              onSelect={goToSlide}
-            />
-          ) : null}
-
-          {useWelcomeFooter ? (
-            <TouchableOpacity
-              style={styles.welcomeNextBtn}
-              onPress={goNext}
-              activeOpacity={0.88}
-              accessibilityRole="button"
-              accessibilityLabel={nextLabel}>
-              <Text style={styles.nextBtnText}>{nextLabel}</Text>
-            </TouchableOpacity>
-          ) : (
-            <Button
-              label={nextLabel}
-              onPress={goNext}
-              height={52}
-              btnStyle={styles.nextBtn}
-              textStyle={styles.nextBtnText}
-            />
-          )}
+        {!useWelcomeFooter ? (
+        <View style={[styles.footer, styles.footerStandard]}>
+          <OnboardingPagination
+            count={pagination.count}
+            index={pagination.index}
+            onSelect={goToSlide}
+          />
+          <Button
+            label={nextLabel}
+            onPress={goNext}
+            height={52}
+            btnStyle={styles.nextBtn}
+            textStyle={styles.nextBtnText}
+          />
         </View>
+        ) : null}
       </View>
     </SafeAreaView>
   );
@@ -144,6 +134,10 @@ const styles = StyleSheet.create({
   listContent: {
     flexGrow: 1,
   },
+  slidePage: {
+    width: ONBOARDING_UI.screenW,
+    height: '100%',
+  },
   footer: {
     backgroundColor: ONBOARDING_UI.cream,
   },
@@ -152,21 +146,6 @@ const styles = StyleSheet.create({
     paddingTop: Sizer.vSize(10),
     paddingBottom: Sizer.vSize(10),
     gap: 16,
-  },
-  footerWelcome: {
-    paddingHorizontal: ONBOARDING_UI.padX,
-    paddingTop: 0,
-    paddingBottom: Sizer.vSize(10),
-    alignItems: 'flex-end',
-  },
-  welcomeNextBtn: {
-    height: Sizer.hSize(42),
-    minWidth: Sizer.hSize(104),
-    paddingHorizontal: Sizer.hSize(32),
-    borderRadius: 22,
-    backgroundColor: ONBOARDING_UI.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   nextBtn: {
     borderRadius: ONBOARDING_UI.radiusMd,

@@ -8,11 +8,12 @@ import { G } from '../_partials/gardenUi';
 import Sizer from '../../helpers/Sizer';
 import { ONBOARDING_IMAGE, ONBOARDING_UI } from '../OnBoard/onboardingUi';
 import SetupFlowLayout from './_partials/SetupFlowLayout';
+import { accountInvite } from '../../assets/images';
 
 const INVITE_IMAGE_BOX = {
   ...ONBOARDING_IMAGE.middle,
-  minHeight: 170,
-  maxHeight: 200,
+  minHeight: 180,
+  maxHeight: 220,
 };
 
 const FIELD_HEIGHT = Sizer.hSize(44);
@@ -26,7 +27,8 @@ const InviteHouseholdScreen = ({ navigation }) => {
       title="Invite your household to garden together."
       subtitle="Add people you live with so you can plan and grow together."
       subtitleColor={ONBOARDING_UI.text}
-      imageKey="setup-invite-household"
+      imageSource={accountInvite}
+      imageScale={1.05}
       imageBox={INVITE_IMAGE_BOX}
       imageResizeMode="contain"
       footer={
@@ -39,7 +41,7 @@ const InviteHouseholdScreen = ({ navigation }) => {
             textStyle={styles.primaryBtnText}
           />
           <TouchableOpacity onPress={goNext} activeOpacity={0.7} accessibilityRole="button">
-            <Typography size={13} color={ONBOARDING_UI.primary} textAlign="center" style={styles.footerLink}>
+            <Typography size={14} color={ONBOARDING_UI.green} textAlign="center" style={styles.footerLink}>
               Skip for now
             </Typography>
           </TouchableOpacity>
@@ -48,7 +50,7 @@ const InviteHouseholdScreen = ({ navigation }) => {
       <View style={styles.formBlock}>
         <TextInput
           placeholder="Email address"
-          placeholderTextColor={ONBOARDING_UI.text}
+          placeholderTextColor={G.muted}
           keyboardType="email-address"
           autoCapitalize="none"
           autoCorrect={false}
@@ -56,7 +58,7 @@ const InviteHouseholdScreen = ({ navigation }) => {
         />
 
         <TouchableOpacity style={styles.addBtn} activeOpacity={0.7} accessibilityRole="button">
-          <Typography size={20} color={ONBOARDING_UI.primary} style={styles.addIcon}>
+          <Typography size={18} color={ONBOARDING_UI.green} style={styles.addIcon}>
             +
           </Typography>
           <Typography size={14} color={ONBOARDING_UI.green} style={styles.addLabel}>
@@ -67,9 +69,9 @@ const InviteHouseholdScreen = ({ navigation }) => {
 
       <View style={styles.callout}>
         <View style={styles.calloutIcon}>
-          <OnboardingFeatureIcon name="group" />
+          <OnboardingFeatureIcon name="group" color={ONBOARDING_UI.green} />
         </View>
-        <Typography size={12} color={ONBOARDING_UI.green} style={styles.calloutText}>
+        <Typography size={13} color={ONBOARDING_UI.green} style={styles.calloutText}>
           You can invite members anytime from your account settings.
         </Typography>
       </View>
@@ -80,13 +82,14 @@ const InviteHouseholdScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   formBlock: {
     gap: Sizer.vSize(10),
+    marginTop: Sizer.vSize(4),
   },
   field: {
     height: FIELD_HEIGHT,
     borderRadius: ONBOARDING_UI.radiusMd,
     borderWidth: 1,
     borderColor: ONBOARDING_UI.cardBorder,
-    backgroundColor: ONBOARDING_UI.cream,
+    backgroundColor: ONBOARDING_UI.cardBg,
     paddingHorizontal: Sizer.hSize(14),
     fontSize: Sizer.fS(14),
     fontFamily: FONTS.body,
@@ -97,16 +100,15 @@ const styles = StyleSheet.create({
     borderRadius: ONBOARDING_UI.radiusMd,
     borderWidth: 1,
     borderColor: ONBOARDING_UI.cardBorder,
-    backgroundColor: ONBOARDING_UI.cream,
+    backgroundColor: ONBOARDING_UI.cardBg,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: Sizer.hSize(8),
+    gap: Sizer.hSize(6),
   },
   addIcon: {
-    fontWeight: '600',
-    lineHeight: Sizer.fS(22),
-    marginTop: -1,
+    fontWeight: '500',
+    lineHeight: Sizer.fS(20),
   },
   addLabel: {
     fontFamily: FONTS.body,
@@ -116,11 +118,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Sizer.hSize(12),
-    marginTop: Sizer.vSize(12),
+    marginTop: Sizer.vSize(14),
     paddingHorizontal: Sizer.hSize(14),
     paddingVertical: Sizer.vSize(14),
     borderRadius: ONBOARDING_UI.radiusMd,
-    backgroundColor: G.sageLight,
+    backgroundColor: G.sageBanner,
   },
   calloutIcon: {
     width: 28,
@@ -129,7 +131,7 @@ const styles = StyleSheet.create({
   },
   calloutText: {
     flex: 1,
-    lineHeight: Sizer.fS(18),
+    lineHeight: Sizer.fS(19),
     fontFamily: FONTS.body,
     fontWeight: '400',
   },
@@ -143,8 +145,9 @@ const styles = StyleSheet.create({
     fontSize: Sizer.fS(16),
   },
   footerLink: {
-    fontFamily: FONTS.bodySemiBold,
-    fontWeight: '600',
+    fontFamily: FONTS.body,
+    fontWeight: '500',
+    marginTop: Sizer.vSize(14),
   },
 });
 

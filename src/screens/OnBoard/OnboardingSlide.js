@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { OnboardingFeatureIcon } from '../../components/solterra/OnboardingFeatureIcons';
 import { OnboardingPreviewBlock } from '../../components/solterra/OnboardingPreviewBlocks';
 import OnboardingImagePlaceholder from '../../components/solterra/OnboardingImagePlaceholder';
-import TrellisWordmark from '../../components/solterra/TrellisWordmark';
 import Typography from '../../atomComponents/Typography';
+import { solterraLogoOnboard } from '../../assets/images';
 import { FONTS } from '../../globalStyle/Theme';
 import Sizer from '../../helpers/Sizer';
 import {
@@ -14,6 +14,23 @@ import {
   ONBOARDING_IMAGE,
   ONBOARDING_UI,
 } from './onboardingUi';
+
+const ONBOARD_LOGO_ASPECT = 1366 / 546;
+
+function OnboardLogo({ centered = false }) {
+  const height = Sizer.fS(44);
+  const width = height * ONBOARD_LOGO_ASPECT;
+
+  return (
+    <Image
+      source={solterraLogoOnboard}
+      style={[styles.onboardLogo, { width, height }, centered && styles.onboardLogoCenter]}
+      resizeMode="contain"
+      accessibilityRole="image"
+      accessibilityLabel="Trellis"
+    />
+  );
+}
 
 function normalizeItem(item) {
   if (typeof item === 'string') {
@@ -50,25 +67,90 @@ function ChecklistRow({ label }) {
   );
 }
 
-function ImageSlot({ slide, position, wrapperStyle }) {
+function getScaledImageSize(source, contentWidth, scale = 1) {
+  const resolved = Image.resolveAssetSource(source);
+  if (!resolved?.width || !resolved?.height) {
+    return null;
+  }
+
+  const width = contentWidth * scale;
+  const height = width / (resolved.width / resolved.height);
+  return { width, height };
+}
+
+function WelcomeHeroImage({ source }) {
+  return (
+    <Image
+      source={source}
+      style={styles.welcomeHeroImage}
+      resizeMode="contain"
+      accessibilityIgnoresInvertColors
+      accessibilityLabel="Welcome garden illustration"
+    />
+  );
+}
+
+function ImageSlot({ slide, position }) {
   if (slide.imagePosition !== position) {
     return null;
   }
 
   const preset = ONBOARDING_IMAGE[position] ?? ONBOARDING_IMAGE.plan;
   const box = slide.imageBox ?? preset;
+  const flexFill = slide.imageFlexFill ?? true;
+  const borderRadius = box.borderRadius ?? ONBOARDING_UI.radiusMd;
+  const contentWidth = slide.imageFullBleed
+    ? ONBOARDING_UI.screenW
+    : ONBOARDING_UI.screenW - ONBOARDING_UI.padX * 2;
+  const scaledSize =
+    !flexFill && slide.imageSource
+      ? getScaledImageSize(slide.imageSource, contentWidth, slide.imageScale ?? 1)
+      : null;
+
+  if (scaledSize) {
+    return (
+      <View
+        style={[
+          styles.scaledImageClip,
+          {
+            width: contentWidth,
+            height: scaledSize.height,
+            borderRadius,
+          },
+        ]}
+        accessibilityLabel={`${slide.imageKey} illustration`}>
+        <Image
+          source={slide.imageSource}
+          style={{
+            width: scaledSize.width,
+            height: scaledSize.height,
+          }}
+          resizeMode={slide.imageResizeMode ?? 'contain'}
+          accessibilityIgnoresInvertColors
+        />
+      </View>
+    );
+  }
+
+  const scaledHeight =
+    box.height != null
+      ? Sizer.vSize(box.height)
+      : !flexFill && box.maxHeight != null
+        ? Sizer.vSize(box.maxHeight)
+        : undefined;
 
   return (
-    <View style={[styles.imageSlot, wrapperStyle]}>
-      <OnboardingImagePlaceholder
-        source={slide.imageSource}
-        imageKey={slide.imageKey}
-        minHeight={box.minHeight}
-        maxHeight={box.maxHeight}
-        maxWidth={box.maxWidth}
-        borderRadius={box.borderRadius ?? ONBOARDING_UI.radiusMd}
-      />
-    </View>
+    <OnboardingImagePlaceholder
+      source={slide.imageSource}
+      imageKey={slide.imageKey}
+      minHeight={box.minHeight != null ? Sizer.vSize(box.minHeight) : box.minHeight}
+      maxHeight={box.maxHeight != null ? Sizer.vSize(box.maxHeight) : box.maxHeight}
+      height={scaledHeight}
+      maxWidth={box.maxWidth}
+      borderRadius={borderRadius}
+      resizeMode={slide.imageResizeMode ?? 'cover'}
+      flexFill={flexFill}
+    />
   );
 }
 
@@ -116,14 +198,18 @@ function TextBlock({ slide, isCenter, textAlign, titleSize }) {
   return (
     <>
       {slide.intro ? (
-        <Typography size={14} color={ONBOARDING_UI.text} textAlign={textAlign} style={styles.intro}>
+        <Typography
+          size={14}
+          color={ONBOARDING_UI.text}
+          textAlign={textAlign}
+          style={styles.intro}>
           {slide.intro}
         </Typography>
       ) : null}
 
       {slide.showLogo ? (
         <View style={[styles.logoWrap, isCenter && styles.logoWrapCenter]}>
-          <TrellisWordmark color={ONBOARDING_UI.green} />
+          <OnboardLogo centered={isCenter} />
         </View>
       ) : null}
 
@@ -157,7 +243,7 @@ function TextBlock({ slide, isCenter, textAlign, titleSize }) {
             size={14}
             color={ONBOARDING_UI.text}
             textAlign={textAlign}
-            mT={12}
+            mT={slide.bodyMarginTop ?? 12}
             style={[styles.bodyText, slide.listVariant === LIST_VARIANT.checklist && styles.bodyPlan]}>
             {slide.body}
           </Typography>
@@ -179,7 +265,7 @@ function TextBlock({ slide, isCenter, textAlign, titleSize }) {
 }
 
 /** Single onboarding layout — flex only, no vertical scroll */
-export default function OnboardingSlide({ slide }) {
+export default function OnboardingSlide({ slide, onWelcomeNext, welcomeNextLabel = 'Next' }) {
   const align = slide.contentAlign ?? CONTENT_ALIGN.left;
   const isCenter = align === CONTENT_ALIGN.center;
   const textAlign = isCenter ? 'center' : 'left';
@@ -187,6 +273,34 @@ export default function OnboardingSlide({ slide }) {
   const hasTopImage = slide.imagePosition === IMAGE_POSITION.top;
   const hasMiddleImage = slide.imagePosition === IMAGE_POSITION.middle;
   const hasBottomImage = slide.imagePosition === IMAGE_POSITION.bottom;
+  const isWelcome = slide.id === 'welcome';
+
+  if (isWelcome) {
+    return (
+      <View style={styles.slide}>
+        <View style={styles.topImageSectionWelcome}>
+          <WelcomeHeroImage source={slide.imageSource} />
+        </View>
+
+        <View style={styles.welcomeBottom}>
+          <TextBlock slide={slide} isCenter={false} textAlign="left" titleSize={titleSize} />
+
+          {onWelcomeNext ? (
+            <View style={styles.welcomeActionRow}>
+              <TouchableOpacity
+                style={styles.welcomeNextBtn}
+                onPress={onWelcomeNext}
+                activeOpacity={0.88}
+                accessibilityRole="button"
+                accessibilityLabel={welcomeNextLabel}>
+                <Text style={styles.welcomeNextText}>{welcomeNextLabel}</Text>
+              </TouchableOpacity>
+            </View>
+          ) : null}
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.slide}>
@@ -196,21 +310,33 @@ export default function OnboardingSlide({ slide }) {
         </View>
       ) : null}
 
-      <View
-        style={[
-          styles.body,
+      <ScrollView
+        style={styles.bodyScroll}
+        contentContainerStyle={[
           hasTopImage ? styles.bodyAfterTopImage : styles.bodyDefault,
-        ]}>
+          styles.bodyScrollContent,
+        ]}
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        keyboardShouldPersistTaps="handled">
         <View style={styles.textSection}>
           <TextBlock slide={slide} isCenter={isCenter} textAlign={textAlign} titleSize={titleSize} />
         </View>
 
         {hasMiddleImage ? (
-          <ImageSlot
-            slide={slide}
-            position={IMAGE_POSITION.middle}
-            wrapperStyle={styles.imageSection}
-          />
+          <View
+            style={[
+              styles.imageSection,
+              isCenter && styles.imageSectionCentered,
+              slide.imageFlexFill === false && styles.imageSectionCompact,
+              slide.imageFullBleed && styles.imageSectionFullBleed,
+              slide.imageMarginTop != null && { marginTop: Sizer.vSize(slide.imageMarginTop) },
+              slide.imageMarginBottom != null && {
+                marginBottom: Sizer.vSize(slide.imageMarginBottom),
+              },
+            ]}>
+            <ImageSlot slide={slide} position={IMAGE_POSITION.middle} />
+          </View>
         ) : null}
 
         <View style={styles.listsSection}>
@@ -230,13 +356,21 @@ export default function OnboardingSlide({ slide }) {
         </View>
 
         {hasBottomImage ? (
-          <ImageSlot
-            slide={slide}
-            position={IMAGE_POSITION.bottom}
-            wrapperStyle={styles.imageSection}
-          />
+          <View
+            style={[
+              styles.imageSection,
+              isCenter && styles.imageSectionCentered,
+              slide.imageFlexFill === false && styles.imageSectionCompact,
+              slide.imageFullBleed && styles.imageSectionFullBleed,
+              slide.imageMarginTop != null && { marginTop: Sizer.vSize(slide.imageMarginTop) },
+              slide.imageMarginBottom != null && {
+                marginBottom: Sizer.vSize(slide.imageMarginBottom),
+              },
+            ]}>
+            <ImageSlot slide={slide} position={IMAGE_POSITION.bottom} />
+          </View>
         ) : null}
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -244,26 +378,79 @@ export default function OnboardingSlide({ slide }) {
 const styles = StyleSheet.create({
   slide: {
     width: ONBOARDING_UI.screenW,
-    height: '100%',
+    flex: 1,
     backgroundColor: ONBOARDING_UI.cream,
   },
   topImageSection: {
     flex: 54,
     minHeight: 0,
     paddingHorizontal: ONBOARDING_UI.padX,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  body: {
+  topImageSectionWelcome: {
+    flex: 1,
+    paddingHorizontal: 0,
+    paddingTop: Sizer.vSize(12),
+    alignItems: 'stretch',
+    justifyContent: 'flex-start',
+  },
+  welcomeHeroImage: {
+    width: '100%',
+    flex: 1,
+  },
+  imageSectionFullBleed: {
+    width: ONBOARDING_UI.screenW,
+    marginHorizontal: -ONBOARDING_UI.padX,
+    alignSelf: 'center',
+  },
+  bodyScroll: {
     flex: 1,
     minHeight: 0,
+  },
+  bodyScrollContent: {
+    flexGrow: 1,
+    paddingBottom: Sizer.vSize(16),
+  },
+  body: {
+    minHeight: 0,
+  },
+  bodyFill: {
+    flex: 1,
+  },
+  welcomeBottom: {
+    flexShrink: 0,
+    paddingHorizontal: ONBOARDING_UI.padX,
+    paddingTop: Sizer.vSize(10),
+    paddingBottom: Sizer.vSize(16),
+  },
+  welcomeActionRow: {
+    alignItems: 'flex-end',
+    marginTop: Sizer.vSize(22),
+  },
+  welcomeNextBtn: {
+    height: Sizer.hSize(44),
+    minWidth: Sizer.hSize(108),
+    paddingHorizontal: Sizer.hSize(36),
+    borderRadius: ONBOARDING_UI.radiusMd,
+    backgroundColor: ONBOARDING_UI.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  welcomeNextText: {
+    color: ONBOARDING_UI.white,
+    fontFamily: FONTS.bodySemiBold,
+    fontSize: Sizer.fS(16),
+    fontWeight: '600',
   },
   bodyDefault: {
     paddingHorizontal: ONBOARDING_UI.padX,
     paddingTop: Sizer.vSize(20),
   },
   bodyAfterTopImage: {
-    flex: 46,
     paddingHorizontal: ONBOARDING_UI.padX,
-    paddingTop: Sizer.vSize(22),
+    paddingTop: Sizer.vSize(16),
+    justifyContent: 'flex-start',
   },
   textSection: {
     flexShrink: 0,
@@ -275,9 +462,19 @@ const styles = StyleSheet.create({
     marginBottom: Sizer.vSize(8),
     width: '100%',
   },
-  imageSlot: {
-    flex: 1,
-    minHeight: 0,
+  imageSectionCompact: {
+    flex: 0,
+    flexGrow: 0,
+    flexShrink: 0,
+  },
+  imageSectionCentered: {
+    alignItems: 'center',
+  },
+  scaledImageClip: {
+    overflow: 'hidden',
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   intro: {
     fontFamily: FONTS.body,
@@ -288,6 +485,12 @@ const styles = StyleSheet.create({
   },
   logoWrapCenter: {
     alignItems: 'center',
+  },
+  onboardLogo: {
+    alignSelf: 'flex-start',
+  },
+  onboardLogoCenter: {
+    alignSelf: 'center',
   },
   title: {
     fontWeight: '700',

@@ -8,6 +8,12 @@ import InviteHouseholdScreen from './Auth/InviteHouseholdScreen';
 import ConnectExperienceScreen from './Auth/ConnectExperienceScreen';
 import PlanIntroScreen from './Plan/PlanIntroScreen';
 import PlanAboutYouScreen from './Plan/PlanAboutYouScreen';
+import PlanLocationScreen from './Plan/PlanLocationScreen';
+import PlanSpaceTypeScreen from './Plan/PlanSpaceTypeScreen';
+import PlanTimeCommitmentScreen from './Plan/PlanTimeCommitmentScreen';
+import PlanBudgetScreen from './Plan/PlanBudgetScreen';
+import PlanPlantInterestsScreen from './Plan/PlanPlantInterestsScreen';
+import PlanGardenPhotoScreen from './Plan/PlanGardenPhotoScreen';
 import PlanAnalyzingScreen from './Plan/PlanAnalyzingScreen';
 import PlanFindingsReviewScreen from './Plan/PlanFindingsReviewScreen';
 import PlanRecommendedStyleScreen from './Plan/PlanRecommendedStyleScreen';
@@ -55,6 +61,12 @@ export {
   ConnectExperienceScreen,
   PlanIntroScreen,
   PlanAboutYouScreen,
+  PlanLocationScreen,
+  PlanSpaceTypeScreen,
+  PlanTimeCommitmentScreen,
+  PlanBudgetScreen,
+  PlanPlantInterestsScreen,
+  PlanGardenPhotoScreen,
   PlanAnalyzingScreen,
   PlanFindingsReviewScreen,
   PlanRecommendedStyleScreen,

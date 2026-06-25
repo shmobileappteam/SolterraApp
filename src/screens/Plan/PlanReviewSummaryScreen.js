@@ -1,8 +1,9 @@
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Button } from '../../components';
 import OnboardingPagination from '../../components/solterra/OnboardingPagination';
 import Typography from '../../atomComponents/Typography';
+import Sizer from '../../helpers/Sizer';
 import { ONBOARDING_UI } from '../OnBoard/onboardingUi';
 import PlanFlowLayout from './_partials/PlanFlowLayout';
 import {
@@ -38,8 +39,12 @@ const PlanReviewSummaryScreen = ({ navigation }) => {
           <PlanBanner text="You'll be in your garden soon!" />
           <OnboardingPagination count={PLAN_FINAL_STEPS} index={3} />
           <View style={planUiStyles.dualFooter}>
-            <TouchableOpacity style={planUiStyles.outlineBtn} activeOpacity={0.8}>
-              <Typography size={15} color={ONBOARDING_UI.primary} style={planUiStyles.outlineBtnText}>
+            <TouchableOpacity style={[planUiStyles.outlineBtn, styles.editBtn]} activeOpacity={0.8}>
+              <Typography
+                size={14}
+                color={ONBOARDING_UI.primary}
+                numberOfLines={1}
+                style={planUiStyles.outlineBtnText}>
                 Edit Selections
               </Typography>
             </TouchableOpacity>
@@ -47,8 +52,8 @@ const PlanReviewSummaryScreen = ({ navigation }) => {
               label="Confirm & Build Plan"
               onPress={goNext}
               height={52}
-              btnStyle={[planUiStyles.primaryBtn, { flex: 1 }]}
-              textStyle={planUiStyles.primaryBtnText}
+              btnStyle={[planUiStyles.primaryBtn, styles.confirmBtn]}
+              textStyle={[planUiStyles.primaryBtnText, styles.confirmBtnText]}
             />
           </View>
         </>
@@ -69,5 +74,20 @@ const PlanReviewSummaryScreen = ({ navigation }) => {
     </PlanFlowLayout>
   );
 };
+
+const styles = StyleSheet.create({
+  editBtn: {
+    flex: 0.9,
+    paddingHorizontal: Sizer.hSize(8),
+  },
+  confirmBtn: {
+    flex: 1.1,
+    minWidth: 0,
+    paddingHorizontal: Sizer.hSize(8),
+  },
+  confirmBtnText: {
+    fontSize: Sizer.fS(13),
+  },
+});
 
 export default PlanReviewSummaryScreen;
